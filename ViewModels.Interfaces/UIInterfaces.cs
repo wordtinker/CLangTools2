@@ -18,6 +18,7 @@ namespace ViewModels.Interfaces
         //string CorpusDir { get; }
         //string DicDir { get; }
         //string OutDir { get; }
-        //void Shutdown();
+        void ShowHelp();
+        void Shutdown();
     }
 }

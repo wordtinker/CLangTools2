@@ -1,8 +1,10 @@
-﻿using System.Windows;
+﻿using Prism.Logging;
+using System.Windows;
 using ViewModels.Interfaces;
 using ViewModels;
 using Models.Interfaces;
 using Models;
+// TODO fix usings order across all projects
 
 namespace LangTools
 {
@@ -11,6 +13,8 @@ namespace LangTools
     /// </summary>
     public partial class App : Application
     {
+        // TODO non empty logger
+        public static ILoggerFacade Logger { get; private set; } = new EmptyLogger();
         /// <summary>
         /// Prepares environmental settings for app and starts.
         /// </summary>
@@ -71,7 +75,7 @@ namespace LangTools
             // TODO do we need cast?
             IUIMainWindowService service = new MainWindowService((MainWindow)MainWindow);
             IDataProvider dataProvider = new StubModel();
-            MainWindow.DataContext = new MainViewModel(service, dataProvider);
+            MainWindow.DataContext = new MainViewModel(service, dataProvider, Logger);
             MainWindow.Show();
         }
 
@@ -82,8 +86,7 @@ namespace LangTools
         /// <param name="e"></param>
         private void HandleException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            // TODO Logger
-            //Log.Logger.Error(e.Exception.ToString());
+            Logger.Log(e.Exception.ToString(), Category.Exception, Priority.High);
         }
     }
 }
