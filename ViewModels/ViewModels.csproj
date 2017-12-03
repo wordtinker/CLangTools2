@@ -43,9 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DictViewModel.cs" />
+    <Compile Include="FileStatsViewModel.cs" />
     <Compile Include="LingvaViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WordViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Models.Interfaces\Models.Interfaces.csproj">

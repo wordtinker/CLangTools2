@@ -16,16 +16,31 @@ namespace ViewModels
         private ILoggerFacade logger;
         private ICommand exitApp;
         private ICommand showHelp;
-        private LingvaViewModel currentLingva;
         private bool projectSelectable = true; // defines if the user can switch project
+        private string log;
+        private int progressValue;
 
         // Properties
         public ObservableCollection<LingvaViewModel> Languages { get; }
         public ObservableCollection<string> Projects { get; }
+        public ObservableCollection<DictViewModel> Dictionaries { get; }
+        public ObservableCollection<FileStatsViewModel> Files { get; }
+        public ObservableCollection<WordViewModel> Words { get; }
+        public ObservableCollection<WordViewModel> WordsInProject { get; }
         public bool ProjectSelectable
         {
             get => projectSelectable;
             set => SetProperty(ref projectSelectable, value);
+        }
+        public string Log
+        {
+            get => log;
+            set => SetProperty(ref log, value);
+        }
+        public int ProgressValue
+        {
+            get => progressValue;
+            set => SetProperty(ref progressValue, value);
         }
 
         // ctor
@@ -36,7 +51,12 @@ namespace ViewModels
             this.logger = logger;
             Languages = new ObservableCollection<LingvaViewModel>();
             Projects = new ObservableCollection<string>();
+            Dictionaries = new ObservableCollection<DictViewModel>();
+            Files = new ObservableCollection<FileStatsViewModel>();
+            Words = new ObservableCollection<WordViewModel>();
+            WordsInProject = new ObservableCollection<WordViewModel>();
             OnLoad();
+            logger.Log("MainView has started.", Category.Debug, Priority.Medium);
         }
         // Methods
         private void OnLoad()
@@ -45,6 +65,7 @@ namespace ViewModels
             {
                 Languages.Add(new LingvaViewModel(lang));
             }
+            ProgressValue = 100;
         }
         /// <summary>
         /// Prepares modelView for new language.
@@ -63,7 +84,7 @@ namespace ViewModels
         {
             logger.Log("Language is selected.", Category.Debug, Priority.Medium);
             // Ask model for new list of projects
-            foreach (string project in dataProvider.GetProjectsForLanguage(lang.CurrentLanguage))
+            foreach (string project in dataProvider.GetProjects(lang.CurrentLanguage))
             {
                 Projects.Add(project);
             }
@@ -74,20 +95,15 @@ namespace ViewModels
         public void ProjectIsAboutToChange()
         {
             logger.Log("Project is about to change.", Category.Debug, Priority.Medium);
-            // TODO STUB
-            //// Remove old dictionaries
-            //while (Dictionaries.Count > 0)
-            //{
-            //    Dictionaries.RemoveAt(0);
-            //}
-            //// Remove old FileStats
-            //while (Files.Count > 0)
-            //{
-            //    Files.RemoveAt(0);
-            //}
-            //// Clear log and list of unknown words
-            //Log = "";
-            //WordsInProject.Clear();
+            // Clear dictionaries for previous project
+            Dictionaries.Clear();
+            // Clear FileStats
+            Files.Clear();
+            // Clear log and list of unknown words
+            Log = "";
+            WordsInProject.Clear();
+            // TODO Test ???
+            Words.Clear();
         }
         /// <summary>
         /// Changes state of viewmodel according to selected project.
@@ -96,11 +112,34 @@ namespace ViewModels
         public void SelectProject(string project)
         {
             logger.Log("Project is selected.", Category.Debug, Priority.Medium);
+            // TODO Test
+            // language might be null during the proccess
+            // of changing language.
+            //if (currentLanguage == null) return;
+
+            // Get both custom and general project dictionaries
+            foreach (IDict dict in dataProvider.GetProjectDictionaries(project))
+            {
+                Dictionaries.Add(new DictViewModel(dict));
+            }
+            // Get files for a project
+            foreach (IFileStats file in dataProvider.GetProjectFiles(project))
+            {
+                Files.Add(new FileStatsViewModel(file));
+            }
+            // Update list of words related to project
+            LoadWordsForProject();
+        }
+        /// <summary>
+        /// Fills the words table for the whole project.
+        /// </summary>
+        private void LoadWordsForProject()
+        {
             // TODO STUB
-            //// ???
-            //model.SelectProject(project);
-            //// Update list of words related to project
-            //ShowWordsForProject();
+            //foreach (var item in model.GetUnknownWords())
+            //{
+            //    WordsInProject.Add(new WordViewModel { Word = item.Key, Quantity = item.Value });
+            //}
         }
         // Commands
         public ICommand ExitApp

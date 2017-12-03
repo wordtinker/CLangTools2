@@ -4,6 +4,7 @@ using ViewModels.Interfaces;
 using ViewModels;
 using Models.Interfaces;
 using Models;
+using System;
 // TODO fix usings order across all projects
 
 namespace LangTools
@@ -22,26 +23,28 @@ namespace LangTools
         /// <param name="e"></param>
         private void ApplicationStartup(object sender, StartupEventArgs e)
         {
-            // TODO STUB
-            //// Get app name from config file
-            //string appName = Tools.ReadSetting("appName");
-            //if (string.IsNullOrWhiteSpace(appName))
-            //{
-            //    MessageBox.Show("Error reading app settings.\nLangTools can't start.");
-            //    return;
-            //}
+            // Get app name from config file
+            string appName = Tools.ReadSetting("appName");
+            if (string.IsNullOrWhiteSpace(appName))
+            {
+                MessageBox.Show("Error reading app settings.\nLangTools can't start.");
+                return;
+            }
 
-            //// Get app directory
-            //string appDir;
-            //try
-            //{
-            //    appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            //}
-            //catch (PlatformNotSupportedException)
-            //{
-            //    MessageBox.Show("Platform is not supported.\nLangTools can't start.");
-            //    return;
-            //}
+            // Get app directory
+            string appDir;
+            try
+            {
+                appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            }
+            catch (PlatformNotSupportedException)
+            {
+                MessageBox.Show("Platform is not supported.\nLangTools can't start.");
+                return;
+            }
+
+            // TODO STUB
+            // TODO Properties? another way?
             //appDir = IOTools.CombinePath(appDir, appName);
             //// Save application directory path for later
             //Current.Properties["appDir"] = appDir;
@@ -53,23 +56,19 @@ namespace LangTools
             //    return;
             //}
 
-            //// Make sure VM is ready to start.
-            //if (!VMBoot.IsReadyToLoad(appDir))
+            //// Ensure we have data storage.
+            //if (!ModelBoot.IsReadyToStart(appDir))
             //{
+            //    NB  return Storage.CreateFile(appDir);
             //    MessageBox.Show(string.Format("Can't start the app."));
             //    return;
             //}
 
-            //Log.Logger.Debug("----The new session has started.----");
-
-            // TODO Logging
-            //Log.Logger.Debug("Starting MainWindow.");
+            Logger.Log("----The new session has started.----", Category.Debug, Priority.Medium);
             // Start the main window
             MainWindow = new MainWindow
             {
-                // TODO STUB
-                //MainWindow.Title = appName;
-                Title = "LangTools2"
+                Title = appName
             };
             // Inject dependencies
             // TODO do we need cast?
