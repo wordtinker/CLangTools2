@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Models.Interfaces
 {
     public interface IFileStats
     {
-        // TODO
+        string FileName { get; }
+        int? Size { get; set; }
+        int? Known { get; set; }
+        int? Maybe { get; set; }
+        int? Unknown { get; set; }
     }
     public enum DictType
     {
@@ -22,12 +27,16 @@ namespace Models.Interfaces
         string Language { get; set; }
         string Folder { get; set; }
     }
-    // TODO
+    // TODO document 
     public interface IDataProvider
     {
         IEnumerable<ILingva> GetLanguages();
         IEnumerable<string> GetProjects(ILingva lingva);
         IEnumerable<IDict> GetProjectDictionaries(string project);
         IEnumerable<IFileStats> GetProjectFiles(string project);
+        IEnumerable<IFileStats> GetFilesWithWord(string word);
+        // TODO 4.7 ()
+        IEnumerable<Tuple<string, int>> GetUnknownWords(IFileStats fileStats);
+        IEnumerable<Tuple<string, int>> GetUnknownWords();
     }
 }

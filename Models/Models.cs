@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Models.Interfaces;
 
 namespace Models
 {
     public class FileStats : IFileStats
     {
-
+        public string FileName { get; internal set; }
+        public int? Size { get; set; }
+        public int? Known { get; set; }
+        public int? Maybe { get; set; }
+        public int? Unknown { get; set; }
     }
     public class Dict : IDict
     {
@@ -40,8 +45,24 @@ namespace Models
         }
         public IEnumerable<IFileStats> GetProjectFiles(string project)
         {
+            yield return new FileStats {FileName = "test.txt", Size = 1000, Known = 900, Maybe = 50, Unknown = 50 };
             yield return new FileStats { };
-            yield return new FileStats { };
+        }
+
+        public IEnumerable<Tuple<string, int>> GetUnknownWords(IFileStats fileStats)
+        {
+            yield return Tuple.Create("word", 54);
+            yield return Tuple.Create("word2", 2);
+        }
+        public IEnumerable<Tuple<string, int>> GetUnknownWords()
+        {
+            yield return Tuple.Create("word", 154);
+            yield return Tuple.Create("word2", 12);
+        }
+
+        public IEnumerable<IFileStats> GetFilesWithWord(string word)
+        {
+            yield return new FileStats { FileName = "test.txt", Size = 1000, Known = 900, Maybe = 50, Unknown = 50 };
         }
     }
 }

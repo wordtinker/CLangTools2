@@ -80,16 +80,14 @@ namespace LangTools
         /// <param name="e"></param>
         private void FileRowChanged(object sender, SelectionChangedEventArgs e)
         {
-            // STUB
-            //MainViewModel vm = (MainViewModel)base.DataContext;
-            //vm.FileRowIsAboutToChange();
-            //DataGrid grid = (DataGrid)sender;
-            //FileStatsViewModel row = grid.SelectedItem as FileStatsViewModel;
-            //if (row != null)
-            //{
-            //    // Let the viewModel update the list of words related to selected file.
-            //    vm.ShowWords(row);
-            //}
+            MainViewModel vm = (MainViewModel)base.DataContext;
+            vm.FileRowIsAboutToChange();
+            DataGrid grid = (DataGrid)sender;
+            if (grid.SelectedItem is FileStatsViewModel row)
+            {
+                // Let the viewModel update the list of words related to selected file.
+                vm.LoadWords(row);
+            }
         }
 
         ///// <summary>
@@ -112,7 +110,7 @@ namespace LangTools
         /// <param name="e"></param>
         private void FilesRow_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            // TODO STUB
+            // TODO Later
             //DataGridRow row = (DataGridRow)sender;
             //// Let the view model open the report file.
             //((FileStatsViewModel)row.DataContext).OpenOutput();
@@ -125,13 +123,12 @@ namespace LangTools
         /// <param name="e"></param>
         private void FilesContextMenu_ClickOpenFile(object sender, RoutedEventArgs e)
         {
-            // TODO STUB
-            //FileStatsViewModel item = filesGrid.SelectedItem as FileStatsViewModel;
-            //if (item != null)
-            //{
-            //    // Let the view model open origin file.
-            //    item.OpenFile();
-            //}
+            if (filesGrid.SelectedItem is FileStatsViewModel item)
+            {
+                // Let the view model open origin file.
+                // TODO Later
+                //item.OpenFile();
+            }
         }
 
         /// <summary>
@@ -141,13 +138,12 @@ namespace LangTools
         /// <param name="e"></param>
         private void FilesContextMenu_ClickOpenOutput(object sender, RoutedEventArgs e)
         {
-            // TODO STUB
-            //FileStatsViewModel item = filesGrid.SelectedItem as FileStatsViewModel;
-            //if (item != null)
-            //{
-            //    // Let the view model open report file.
-            //    item.OpenOutput();
-            //}
+            if (filesGrid.SelectedItem is FileStatsViewModel item)
+            {
+                // Let the view model open report file.
+                // TODO Later
+                //item.OpenOutput();
+            }
         }
 
         /// <summary>
@@ -157,13 +153,12 @@ namespace LangTools
         /// <param name="e"></param>
         private void FilesContextMenu_ClickDeleteFile(object sender, RoutedEventArgs e)
         {
-            // TODO STUB
-            //FileStatsViewModel item = filesGrid.SelectedItem as FileStatsViewModel;
-            //if (item != null)
-            //{
-            //    // Let the view model delete the origin file.
-            //    item.DeleteFile();
-            //}
+            if (filesGrid.SelectedItem is FileStatsViewModel item)
+            {
+                // Let the view model delete the origin file.
+                // TODO Later
+                //item.DeleteFile();
+            }
         }
 
         /// <summary>
@@ -173,13 +168,12 @@ namespace LangTools
         /// <param name="e"></param>
         private void FilesContextMenu_ClickDeleteOutput(object sender, RoutedEventArgs e)
         {
-            // TODO STUB
-            //FileStatsViewModel item = filesGrid.SelectedItem as FileStatsViewModel;
-            //if (item != null)
-            //{
-            //    // Let the view model delete the report file.
-            //    item.DeleteOutput();
-            //}
+            if (filesGrid.SelectedItem is FileStatsViewModel item)
+            {
+                // Let the view model delete the report file.
+                // TODO Later
+                //item.DeleteOutput();
+            }
         }
 
         /// <summary>
@@ -189,7 +183,7 @@ namespace LangTools
         /// <param name="e"></param>
         private void DictsRow_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            // TODO STUB
+            // TODO Later
             //DataGridRow row = (DataGridRow)sender;
             //// Let the view model open the dictionary.
             //((DictViewModel)row.DataContext).OpenFile();
@@ -202,13 +196,12 @@ namespace LangTools
         /// <param name="e"></param>
         private void DictContextMenu_ClickOpen(object sender, RoutedEventArgs e)
         {
-            // TODO STUB
-            //DictViewModel item = dictsGrid.SelectedItem as DictViewModel;
-            //if (item != null)
-            //{
-            //    // Let the view model open the dictionary.
-            //    item.OpenFile();
-            //}
+            if (dictsGrid.SelectedItem is DictViewModel item)
+            {
+                // Let the view model open the dictionary.
+                // TODO Later as baseclass with open methods?
+                //item.OpenFile();
+            }
         }
 
         /// <summary>
@@ -218,13 +211,12 @@ namespace LangTools
         /// <param name="e"></param>
         private void DictContextMenu_ClickDelete(object sender, RoutedEventArgs e)
         {
-            // TODO STUB
-            //DictViewModel item = dictsGrid.SelectedItem as DictViewModel;
-            //if (item != null)
-            //{
-            //    // Let the view model delete the dicionary.
-            //    item.DeleteFile();
-            //}
+            if (dictsGrid.SelectedItem is DictViewModel item)
+            {
+                // Let the view model delete the dicionary.
+                // TODO Later
+                //item.DeleteFile();
+            }
         }
 
         /// <summary>
@@ -234,14 +226,13 @@ namespace LangTools
         /// <param name="e"></param>
         private void WordRow_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            // TODO STUB
-            //MainViewModel vm = (MainViewModel)base.DataContext;
-            //DataGridRow item = sender as DataGridRow;
-            //if (item != null)
-            //{
-            //    // Let view model add the word into dictionary.
-            //    vm.AddWordToDictionary((WordViewModel)item.DataContext);
-            //}
+            MainViewModel vm = (MainViewModel)base.DataContext;
+            if (sender is DataGridRow item && item.DataContext is WordViewModel wordVM)
+            {
+                // Let view model add the word into dictionary.
+                // TODO Later
+                //vm.AddWordToDictionary(wordVM);
+            }
         }
 
         /// <summary>
@@ -251,14 +242,12 @@ namespace LangTools
         /// <param name="e"></param>
         private void WordRow_SingleClick(object sender, MouseButtonEventArgs e)
         {
-            // TODO STUB
-            //MainViewModel vm = (MainViewModel)base.DataContext;
-            //DataGridRow item = sender as DataGridRow;
-            //if (item != null)
-            //{
-            //    // Let view model mark files to highlight.
-            //    vm.HighlightFilesWithWord((WordViewModel)item.DataContext);
-            //}
+            MainViewModel vm = (MainViewModel)base.DataContext;
+            if (sender is DataGridRow item && item.DataContext is WordViewModel wordVM)
+            {
+                // Let view model mark files to highlight.
+                vm.HighlightFilesWithWord(wordVM);
+            }
         }
     }
 }
