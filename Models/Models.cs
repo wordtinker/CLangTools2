@@ -26,6 +26,7 @@ namespace Models
         public override int GetHashCode()
         {
             string baseLine = FilePath ?? string.Empty;
+            // TODO hash of empty string
             return FilePath.GetHashCode();
         }
     }

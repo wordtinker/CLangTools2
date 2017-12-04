@@ -1,13 +1,13 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
+﻿using Models.Interfaces;
+using Prism.Commands;
 using Prism.Logging;
-using Models.Interfaces;
-using ViewModels.Interfaces;
-using System.Windows.Input;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Linq;
+using Prism.Mvvm;
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using ViewModels.Interfaces;
 
 namespace ViewModels
 {
@@ -20,9 +20,10 @@ namespace ViewModels
         private ICommand exitApp;
         private ICommand showHelp;
         private ICommand runProject;
-        private FileStatsViewModel currentFile; // currently selected file
+        private LingvaViewModel currentLanguage; 
         private ProjectViewModel currentProject;
-        private bool projectSelectable = true; // defines if the user can switch project
+        private FileStatsViewModel currentFile;
+        private bool readyToRun = true; // defines if the user can switch project
         private string log;
         private int progressValue;
         private int totalWords; // total words in the project files
@@ -30,25 +31,61 @@ namespace ViewModels
 
         // Properties
         public ObservableCollection<LingvaViewModel> Languages { get; }
+        public LingvaViewModel CurrentLanguage
+        {
+            get => currentLanguage;
+            set
+            {
+                if (SetProperty(ref currentLanguage, value))
+                {
+                    // Clear list of projects
+                    Projects.Clear();
+                    // Select new project
+                    SetUpNewProject();
+                }
+            }
+        }
         public ObservableCollection<ProjectViewModel> Projects { get; }
+        public ProjectViewModel CurrentProject
+        {
+            get => currentProject;
+            set
+            {
+                if (SetProperty(ref currentProject, value))
+                {
+                    // Clear project related data
+                    ProjectCleanUp();
+                    // Set up new data for newly selected project
+                    SetUpData();
+                }
+            }
+        }
         public ObservableCollection<DictViewModel> Dictionaries { get; }
         public ObservableCollection<FileStatsViewModel> Files { get; }
+        public FileStatsViewModel CurrentFile
+        {
+            get => currentFile;
+            set
+            {
+                if (SetProperty(ref currentFile, value))
+                {
+                    // clear old list of words
+                    Words.Clear();
+                    // Load new list of words
+                    LoadWords();
+                }
+            }
+        }
         public ObservableCollection<WordViewModel> Words { get; }
         public ObservableCollection<WordViewModel> WordsInProject { get; }
         public bool ReadyToRun
         {
-            get => projectSelectable;
-            set => SetProperty(ref projectSelectable, value);
+            get => readyToRun;
+            set => SetProperty(ref readyToRun, value);
         }
         public bool CanRunAnalysis
         {
-            get
-            {
-                return Languages.Count > 0
-                    && Projects.Count > 0
-                    && Files.Count > 0
-                    && ReadyToRun;
-            }
+            get => Files.Count > 0 && ReadyToRun;
         }
         public string Log
         {
@@ -98,34 +135,27 @@ namespace ViewModels
             {
                 Languages.Add(new LingvaViewModel(lang));
             }
+            CurrentLanguage = Languages.Count > 0 ? Languages[0] : null;
             ProgressValue = 100;
-        }
-        /// <summary>
-        /// Prepares modelView for new language.
-        /// </summary>
-        public void LanguageIsAboutToChange()
-        {
-            logger.Log("Language is about to change.", Category.Debug, Priority.Medium);
-            // Clear list of projects
-            Projects.Clear();
         }
         /// <summary>
         /// Changes state of viewModel according to selected language.
         /// </summary>
-        /// <param name="item"></param>
-        public void SelectLanguage(LingvaViewModel lang)
+        private void SetUpNewProject()
         {
             logger.Log("Language is selected.", Category.Debug, Priority.Medium);
+            if (CurrentLanguage == null) return;
             // Ask model for new list of projects
-            foreach (IProject project in dataProvider.GetProjects(lang.CurrentLanguage))
+            foreach (IProject project in dataProvider.GetProjects(CurrentLanguage.Lingva))
             {
                 Projects.Add(new ProjectViewModel(project));
             }
+            CurrentProject = Projects.Count > 0 ? Projects[0] : null;
         }
         /// <summary>
         /// Prepares viewModel for new project.
         /// </summary>
-        public void ProjectIsAboutToChange()
+        private void ProjectCleanUp()
         {
             logger.Log("Project is about to change.", Category.Debug, Priority.Medium);
             // Clear dictionaries for previous project
@@ -140,19 +170,17 @@ namespace ViewModels
         /// <summary>
         /// Changes state of viewmodel according to selected project.
         /// </summary>
-        /// <param name="item"></param>
-        public void SelectProject(ProjectViewModel project)
+        private void SetUpData()
         {
             logger.Log("Project is selected.", Category.Debug, Priority.Medium);
-            // TODO Later redo currproject binding
-            currentProject = project;
+            if (CurrentProject == null) return;
             // Get both custom and general project dictionaries
-            foreach (IDict dict in dataProvider.GetProjectDictionaries(project.Project))
+            foreach (IDict dict in dataProvider.GetProjectDictionaries(CurrentProject.Project))
             {
                 Dictionaries.Add(new DictViewModel(dict));
             }
             // Get files for a project
-            foreach (IFileStats file in dataProvider.GetProjectFiles(project.Project))
+            foreach (IFileStats file in dataProvider.GetProjectFiles(CurrentProject.Project))
             {
                 Files.Add(new FileStatsViewModel(file));
             }
@@ -160,22 +188,13 @@ namespace ViewModels
             LoadWordsForProject();
         }
         /// <summary>
-        /// Prepares viewModel for new file selection.
-        /// </summary>
-        public void FileRowIsAboutToChange()
-        {
-            currentFile = null;
-            Words.Clear();
-        }
-        /// <summary>
         /// Fills the Words table with words.
         /// </summary>
-        /// <param name="fileStatsVM"></param>
-        public void LoadWords(FileStatsViewModel fileStatsVM)
+        private void LoadWords()
         {
-            currentFile = fileStatsVM;
-            if (!ReadyToRun) { return; }
-            foreach ((string word, int quantity) in dataProvider.GetUnknownWords(fileStatsVM.FileStats))
+            //Stop if analysis is running.
+            if (!ReadyToRun || CurrentFile == null) return;
+            foreach ((string word, int quantity) in dataProvider.GetUnknownWords(CurrentFile.FileStats))
             {
                 Words.Add(new WordViewModel { Word = word, Quantity = quantity });
             }
@@ -216,7 +235,7 @@ namespace ViewModels
         {
             // Prevent changing of the project.
             ReadyToRun = false;
-            // Clear old project data.
+            // Clear part of old project data.
             Words.Clear();
             WordsInProject.Clear();
             RemoveHighlighting();
@@ -228,7 +247,7 @@ namespace ViewModels
             logger.Log("Requesting Project analysis.", Category.Debug, Priority.Medium);
             // Start analysis
             await Task.Run(() => dataProvider.Analyze(
-                currentProject.Project,
+                CurrentProject.Project,
                 new Progress<(double Progress, IFileStats FileStats)>(p =>
                 {
                     //Update the visual progress of the analysis.
@@ -258,7 +277,7 @@ namespace ViewModels
             UpdateTotalStats();
             ReadyToRun = true;
             // Update WordList
-            if (currentFile != null) { LoadWords(currentFile); }
+            LoadWords();
             LoadWordsForProject();
         }
         /// <summary>
@@ -310,8 +329,6 @@ namespace ViewModels
                 return runProject ??
                 (runProject = new DelegateCommand(
                     async () => await HandleAnalysis())
-                    .ObservesProperty(() => Languages)
-                    .ObservesProperty(() => Projects)
                     .ObservesProperty(() => Files)
                     .ObservesProperty(() => ReadyToRun)
                     .ObservesCanExecute(() => CanRunAnalysis)

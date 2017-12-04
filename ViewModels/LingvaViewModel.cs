@@ -17,7 +17,7 @@ namespace ViewModels
         //private bool allPropertiesValid = false;
 
         // Properties
-        public ILingva CurrentLanguage
+        public ILingva Lingva
         {
             get => currentLanguage;
         }

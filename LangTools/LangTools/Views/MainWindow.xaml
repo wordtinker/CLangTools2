@@ -30,14 +30,14 @@
                     <Label Content="Language"/>
                     <ComboBox x:Name="languagesBox" Width="120"
                           ItemsSource="{Binding Languages}"
+                          SelectedItem="{Binding CurrentLanguage}"
                           DisplayMemberPath="Language"
-                          SelectionChanged="LanguageChanged"
                           IsEnabled="{Binding ReadyToRun}"/>
                     <Label Content="Project"/>
                     <ComboBox x:Name="projectsBox" Width="250"
                           ItemsSource="{Binding Projects}"
+                          SelectedItem="{Binding CurrentProject}"
                           DisplayMemberPath="Name"
-                          SelectionChanged="ProjectChanged"
                           IsEnabled="{Binding ReadyToRun}"/>
                     <Button x:Name="runBtn" Content=">" Width="75" Margin="5,0" Command="{Binding RunProject}"/>
                 </StackPanel>
@@ -100,9 +100,9 @@
                     </GroupBox.Header>
                     <DataGrid x:Name="filesGrid"
                               ItemsSource="{Binding Files}"
+                              SelectedItem="{Binding CurrentFile}"
                               AutoGenerateColumns="False"
                               SelectionMode="Single"
-                              SelectionChanged="FileRowChanged"
                               HeadersVisibility="Column"
                               GridLinesVisibility="Horizontal"
                               IsReadOnly="True"
