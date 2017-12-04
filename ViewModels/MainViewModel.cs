@@ -21,6 +21,7 @@ namespace ViewModels
         private ICommand showHelp;
         private ICommand runProject;
         private FileStatsViewModel currentFile; // currently selected file
+        private ProjectViewModel currentProject;
         private bool projectSelectable = true; // defines if the user can switch project
         private string log;
         private int progressValue;
@@ -29,7 +30,7 @@ namespace ViewModels
 
         // Properties
         public ObservableCollection<LingvaViewModel> Languages { get; }
-        public ObservableCollection<string> Projects { get; }
+        public ObservableCollection<ProjectViewModel> Projects { get; }
         public ObservableCollection<DictViewModel> Dictionaries { get; }
         public ObservableCollection<FileStatsViewModel> Files { get; }
         public ObservableCollection<WordViewModel> Words { get; }
@@ -82,7 +83,7 @@ namespace ViewModels
             this.dataProvider = dataProvider;
             this.logger = logger;
             Languages = new ObservableCollection<LingvaViewModel>();
-            Projects = new ObservableCollection<string>();
+            Projects = new ObservableCollection<ProjectViewModel>();
             Dictionaries = new ObservableCollection<DictViewModel>();
             Files = new ObservableCollection<FileStatsViewModel>();
             Words = new ObservableCollection<WordViewModel>();
@@ -116,9 +117,9 @@ namespace ViewModels
         {
             logger.Log("Language is selected.", Category.Debug, Priority.Medium);
             // Ask model for new list of projects
-            foreach (string project in dataProvider.GetProjects(lang.CurrentLanguage))
+            foreach (IProject project in dataProvider.GetProjects(lang.CurrentLanguage))
             {
-                Projects.Add(project);
+                Projects.Add(new ProjectViewModel(project));
             }
         }
         /// <summary>
@@ -134,28 +135,24 @@ namespace ViewModels
             // Clear log and list of unknown words
             Log = "";
             WordsInProject.Clear();
-            // TODO Test ???
             Words.Clear();
         }
         /// <summary>
         /// Changes state of viewmodel according to selected project.
         /// </summary>
         /// <param name="item"></param>
-        public void SelectProject(string project)
+        public void SelectProject(ProjectViewModel project)
         {
             logger.Log("Project is selected.", Category.Debug, Priority.Medium);
-            // TODO Test
-            // language might be null during the proccess
-            // of changing language.
-            //if (currentLanguage == null) return;
-
+            // TODO Later redo currproject binding
+            currentProject = project;
             // Get both custom and general project dictionaries
-            foreach (IDict dict in dataProvider.GetProjectDictionaries(project))
+            foreach (IDict dict in dataProvider.GetProjectDictionaries(project.Project))
             {
                 Dictionaries.Add(new DictViewModel(dict));
             }
             // Get files for a project
-            foreach (IFileStats file in dataProvider.GetProjectFiles(project))
+            foreach (IFileStats file in dataProvider.GetProjectFiles(project.Project))
             {
                 Files.Add(new FileStatsViewModel(file));
             }
@@ -178,9 +175,9 @@ namespace ViewModels
         {
             currentFile = fileStatsVM;
             if (!ReadyToRun) { return; }
-            foreach (var item in dataProvider.GetUnknownWords(fileStatsVM.FileStats))
+            foreach ((string word, int quantity) in dataProvider.GetUnknownWords(fileStatsVM.FileStats))
             {
-                Words.Add(new WordViewModel { Word = item.Item1, Quantity = item.Item2 });
+                Words.Add(new WordViewModel { Word = word, Quantity = quantity });
             }
         }
         /// <summary>
@@ -196,9 +193,9 @@ namespace ViewModels
         /// </summary>
         private void LoadWordsForProject()
         {
-            foreach (var item in dataProvider.GetUnknownWords())
+            foreach ((string word, int quantity) in dataProvider.GetUnknownWords())
             {
-                WordsInProject.Add(new WordViewModel { Word = item.Item1, Quantity = item.Item2 });
+                WordsInProject.Add(new WordViewModel { Word = word, Quantity = quantity });
             }
         }
         /// <summary>
@@ -229,21 +226,25 @@ namespace ViewModels
             int oldMaybeQty = Files.Sum(x => x.Maybe.GetValueOrDefault());
             ProgressValue = 0;
             logger.Log("Requesting Project analysis.", Category.Debug, Priority.Medium);
-            // TODO pass project
-            // TODO update data
-            await Task.Run(() => Task.Delay(5000));
-            //await Task.Run(() => dataProvider.Analyze(new Progress<(double Progress, string FileName)>(
-            //    p =>
-            //    {
-            //        //Update the visual progress of the analysis.
-            //        ProgressValue = Convert.ToInt32(p.Progress);
-            //        if (p.FileName != null)
-            //        {
-            //            Log = string.Format("{0} is ready!", p.FileName);
-            //        }
-            //    }
-            //    )));
-
+            // Start analysis
+            await Task.Run(() => dataProvider.Analyze(
+                currentProject.Project,
+                new Progress<(double Progress, IFileStats FileStats)>(p =>
+                {
+                    //Update the visual progress of the analysis.
+                    ProgressValue = Convert.ToInt32(p.Progress);
+                    if (p.FileStats != null)
+                    {
+                        // Updating stats
+                        var foundFile = Files.Where(fsvm => fsvm.FileStats.Equals(p.FileStats)).FirstOrDefault();
+                        if (foundFile != null)
+                        {
+                            foundFile.Update(p.FileStats);
+                            Log = string.Format("{0} is ready!", foundFile.FileName);
+                        }
+                    }
+                }
+                )));
             // Get new project stats
             int newKnownQty = Files.Sum(x => x.Known.GetValueOrDefault());
             int newMaybeQty = Files.Sum(x => x.Maybe.GetValueOrDefault());

@@ -6,6 +6,7 @@ namespace Models.Interfaces
     public interface IFileStats
     {
         string FileName { get; }
+        string FilePath { get; }
         int? Size { get; set; }
         int? Known { get; set; }
         int? Maybe { get; set; }
@@ -27,16 +28,20 @@ namespace Models.Interfaces
         string Language { get; set; }
         string Folder { get; set; }
     }
+    public interface IProject
+    {
+        string Name { get; set; }
+    }
     // TODO document 
     public interface IDataProvider
     {
         IEnumerable<ILingva> GetLanguages();
-        IEnumerable<string> GetProjects(ILingva lingva);
-        IEnumerable<IDict> GetProjectDictionaries(string project);
-        IEnumerable<IFileStats> GetProjectFiles(string project);
+        IEnumerable<IProject> GetProjects(ILingva lingva);
+        IEnumerable<IDict> GetProjectDictionaries(IProject project);
+        IEnumerable<IFileStats> GetProjectFiles(IProject project);
         IEnumerable<IFileStats> GetFilesWithWord(string word);
-        // TODO 4.7 ()
-        IEnumerable<Tuple<string, int>> GetUnknownWords(IFileStats fileStats);
-        IEnumerable<Tuple<string, int>> GetUnknownWords();
+        IEnumerable<(string, int)> GetUnknownWords(IFileStats fileStats);
+        IEnumerable<(string, int)> GetUnknownWords();
+        void Analyze(IProject project, IProgress<(double Progress, IFileStats FileStats)> progress);
     }
 }

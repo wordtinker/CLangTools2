@@ -5,28 +5,28 @@ namespace ViewModels
 
     public class DictViewModel
     {
-        private IDict currentDictionary;
+        private IDict dictionary;
 
         // Properties
         public string FileName
         {
-            get => currentDictionary.FileName;
+            get => dictionary.FileName;
         }
 
         // TODO or DictType
         public string DictType
         {
-            get => currentDictionary.DictType.ToString();
+            get => dictionary.DictType.ToString();
         }
 
         public string FilePath
         {
-            get => currentDictionary.FilePath;
+            get => dictionary.FilePath;
         }
         // Constructors
         public DictViewModel(IDict dictionary)
         {
-            this.currentDictionary = dictionary;
+            this.dictionary = dictionary;
         }
     }
 
@@ -37,25 +37,7 @@ namespace ViewModels
     //public class DictViewModel
     //{
     //    // Members
-    //    private readonly Dict currentDictionary;
     //    private IUIBaseService windowService;
-
-    //    // Properties
-    //    public string FileName
-    //    {
-    //        get { return currentDictionary.FileName; }
-
-    //    }
-
-    //    public DictType DictType
-    //    {
-    //        get { return currentDictionary.DictType; }
-    //    }
-
-    //    public string FilePath
-    //    {
-    //        get { return currentDictionary.FilePath; }
-    //    }
 
     //    // Constructors
     //    public DictViewModel(IUIBaseService windowService, Dict dictionary)

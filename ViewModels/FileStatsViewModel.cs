@@ -13,10 +13,10 @@ namespace ViewModels
 
         public IFileStats FileStats { get => fileStats; }
         public string FileName { get => fileStats.FileName; }
-        public int? Size { get => fileStats.Size; }
-        public int? Known { get => fileStats.Known; }
-        public int? Unknown { get => fileStats.Unknown; }
-        public int? Maybe { get => fileStats.Maybe; }
+        public int? Size { get; private set; }
+        public int? Known { get; private set; }
+        public int? Unknown { get; private set; }
+        public int? Maybe { get; private set; }
         public double? KnownPercent { get => ConvertToPercent(Known, Size); }
         public double? MaybePercent { get => ConvertToPercent(Maybe, Size); }
         public double? UnknownPercent { get => ConvertToPercent(Unknown, Size); }
@@ -29,6 +29,16 @@ namespace ViewModels
         public FileStatsViewModel(IFileStats fileStats)
         {
             this.fileStats = fileStats;
+            Update(fileStats);
+        }
+        public void Update(IFileStats fileStats)
+        {
+            Size = fileStats.Size;
+            Known = fileStats.Known;
+            Unknown = fileStats.Unknown;
+            Maybe = fileStats.Maybe;
+            // Notify that every Property changed
+            RaisePropertyChanged(string.Empty);
         }
         // TODO refactor to Shared.Tools.Math
         private double? ConvertToPercent(int? dividend, int? divisor)
@@ -46,16 +56,13 @@ namespace ViewModels
         {
             if (obj is FileStatsViewModel item)
             {
-                string baseLine = FileName ?? string.Empty;
-                return baseLine.Equals(item.FileName);
+                return this.fileStats.Equals(item.fileStats);
             }
             return false;
         }
-
         public override int GetHashCode()
         {
-            string baseLine = FileName ?? string.Empty;
-            return baseLine.GetHashCode();
+            return fileStats.GetHashCode();
         }
     }
     // TODO STUB

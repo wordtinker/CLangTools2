@@ -69,7 +69,7 @@ namespace LangTools
             {
                 App.Logger.Log("Project box selection changed.", Category.Debug, Priority.Medium);
                 object item = projectsBox.SelectedItem;
-                vm.SelectProject((string)item);
+                vm.SelectProject((ProjectViewModel)item);
             }
         }
 

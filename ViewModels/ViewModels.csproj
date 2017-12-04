@@ -48,6 +48,7 @@
     <Compile Include="FileStatsViewModel.cs" />
     <Compile Include="LingvaViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
+    <Compile Include="ProjectViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WordViewModel.cs" />
   </ItemGroup>
