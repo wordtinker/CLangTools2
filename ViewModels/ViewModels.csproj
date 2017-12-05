@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="DictViewModel.cs" />
     <Compile Include="FileStatsViewModel.cs" />
+    <Compile Include="LangWindowViewModel.cs" />
     <Compile Include="LingvaViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="ProjectViewModel.cs" />

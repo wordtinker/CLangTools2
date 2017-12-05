@@ -3,6 +3,20 @@ using System.Collections.Generic;
 
 namespace Models.Interfaces
 {
+    public enum ValidationError
+    {
+        LANGNAMEEMPTY,
+        LANGWITHSPACES,
+        LANGTAKEN,
+        FOLDERNAMEEMPTY,
+        FOLDERTAKEN,
+        NONE
+    }
+    public interface IValidate
+    {
+        ValidationError ValidateLanguageName(string langName);
+        ValidationError ValidateLanguageFolder(string langFolder);
+    }
     public interface IFileStats
     {
         string FileName { get; }

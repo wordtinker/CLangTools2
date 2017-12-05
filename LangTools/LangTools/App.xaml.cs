@@ -71,8 +71,7 @@ namespace LangTools
                 Title = appName
             };
             // Inject dependencies
-            // TODO do we need cast?
-            IUIMainWindowService service = new MainWindowService((MainWindow)MainWindow);
+            IUIMainWindowService service = new MainWindowService(MainWindow);
             IDataProvider dataProvider = new StubModel();
             MainWindow.DataContext = new MainViewModel(service, dataProvider, Logger);
             MainWindow.Show();

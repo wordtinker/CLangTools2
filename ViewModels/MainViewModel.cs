@@ -17,6 +17,7 @@ namespace ViewModels
         private IUIMainWindowService windowService;
         private IDataProvider dataProvider;
         private ILoggerFacade logger;
+        private ICommand manageLanguages;
         private ICommand exitApp;
         private ICommand showHelp;
         private ICommand runProject;
@@ -300,6 +301,17 @@ namespace ViewModels
             }
         }
         // Commands
+        public ICommand ManageLanguages
+        {
+            get
+            {
+                return manageLanguages ??
+                (manageLanguages = new DelegateCommand(() =>
+                {
+                    windowService.ManageLanguages();
+                }));
+            }
+        }
         public ICommand ExitApp
         {
             get

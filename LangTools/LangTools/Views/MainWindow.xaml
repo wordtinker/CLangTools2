@@ -19,7 +19,7 @@
                     <MenuItem Header="_Exit" Command="{Binding ExitApp}"/>
                 </MenuItem>
                 <MenuItem Header="_Languages">
-                    <MenuItem Header="_Manage" Click="LanguagesManage_click"/>
+                    <MenuItem Header="_Manage" Command="{Binding ManageLanguages}"/>
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Header="About" Command="{Binding ShowHelp}"/>

@@ -18,19 +18,6 @@ namespace LangTools
             App.Logger.Log("MainWindow has started.", Category.Debug, Priority.Medium);
         }
 
-        ///// <summary>
-        ///// Shows modal window to manage languages.
-        ///// </summary>
-        private void LanguagesManage_click(object sender, RoutedEventArgs e)
-        {
-            // TODO STUB Skipped
-            //LangWindow dialog = new LangWindow();
-            //dialog.DataContext = base.DataContext;
-            //// Ensure the alt+tab is working properly.
-            //dialog.Owner = this;
-            //dialog.ShowDialog();
-        }
-
         /// <summary>
         /// Responds to DoubleClick even in the dataGrid with files.
         /// </summary>

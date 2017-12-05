@@ -3,6 +3,28 @@ using Models.Interfaces;
 
 namespace Models
 {
+    public class LingvaValidator : IValidate
+    {
+        public ValidationError ValidateLanguageName(string langName)
+        {
+            if (langName == null) return ValidationError.LANGNAMEEMPTY;
+            string lang = langName.Trim();
+            if (lang.Length == 0) return ValidationError.LANGNAMEEMPTY;
+            if (lang.Length != langName.Length) return ValidationError.LANGWITHSPACES;
+            // TODO
+            //if (dataProvider.LanguageExists(lang)) return ValidationError.LANGTAKEN;
+            return ValidationError.NONE;
+        }
+        public ValidationError ValidateLanguageFolder(string langFolder)
+        {
+            if (langFolder == null) return ValidationError.FOLDERNAMEEMPTY;
+            if (langFolder.Length == 0) return ValidationError.FOLDERNAMEEMPTY;
+            // TODO
+            //if (dataProvider.FolderExists(langFolder)) return ValidationError.FOLDERTAKEN;
+            return ValidationError.NONE;
+        }
+    }
+
     public class FileStats : IFileStats
     {
         // TODO must implement Equals
