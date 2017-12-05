@@ -130,5 +130,10 @@ namespace Models
         {
             return new Lingva { Language = name, Folder = folder };
         }
+
+        public void RemoveLanguage(ILingva lingva)
+        {
+            // DO nothing
+        }
     }
 }

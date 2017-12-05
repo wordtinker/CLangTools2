@@ -18,6 +18,7 @@ namespace ViewModels
         private IValidate validator;
         private ICommand getFolder;
         private ICommand addLanguage;
+        private ICommand removeLanguage;
         private string language;
         private string folder;
         // Used for IDataErrorInfo
@@ -31,6 +32,7 @@ namespace ViewModels
             set => SetProperty(ref allPropertiesValid, value);
         }
         public ObservableCollection<LingvaViewModel> Languages { get => mediatorVM.Languages; }
+        public LingvaViewModel SelectedLanguage { get; set; }
         public string Language
         {
             get => language;
@@ -138,6 +140,23 @@ namespace ViewModels
                     Language = string.Empty;
                     Folder = string.Empty;
                 }));
+            }
+        }
+        public ICommand RemoveLanguage
+        {
+            get
+            {
+                return removeLanguage ??
+                (removeLanguage = new DelegateCommand(() =>
+                {
+                    if (SelectedLanguage != null)
+                    {
+                        // TODO
+                        // Log.Logger.Debug(string.Format("Delete new language: {0}", dirName));
+                        mediatorVM.RemoveLanguage(SelectedLanguage);
+                    }
+                }));
+
             }
         }
     }

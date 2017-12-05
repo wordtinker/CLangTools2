@@ -307,8 +307,21 @@ namespace ViewModels
         {
             logger.Log("Adding new language.", Category.Debug, Priority.Medium);
             ILingva newLang = dataProvider.CreateLanguage(name, folder);
-            // TODO move to LangWindow?
             Languages.Add(new LingvaViewModel(newLang));
+        }
+        /// <summary>
+        /// Removes language from viewModel and model.
+        /// </summary>
+        /// <param name="languageViewModel"></param>
+        public void RemoveLanguage(LingvaViewModel languageViewModel)
+        {
+            ILingva lang = languageViewModel.Lingva;
+            logger.Log(string.Format("Removing {0} language from {1}.", lang.Language, lang.Folder), Category.Debug, Priority.Medium);
+            dataProvider.RemoveLanguage(lang);
+            Languages.Remove(languageViewModel);
+            // TODO can it be simplified and moved to LangWindow?
+            // Adjust lang selection if current language was deleted
+            if (CurrentLanguage == null && Languages.Count > 0) CurrentLanguage = Languages[0];
         }
         // Commands
         public ICommand ManageLanguages

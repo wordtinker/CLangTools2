@@ -58,5 +58,6 @@ namespace Models.Interfaces
         IEnumerable<(string, int)> GetUnknownWords();
         void Analyze(IProject project, IProgress<(double Progress, IFileStats FileStats)> progress);
         ILingva CreateLanguage(string name, string folder);
+        void RemoveLanguage(ILingva lingva);
     }
 }

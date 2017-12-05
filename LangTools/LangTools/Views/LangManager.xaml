@@ -45,11 +45,12 @@
                             Command="{Binding AddLanguage}"
                             IsEnabled="{Binding AllPropertiesValid}"/>
                     <Button Content="Remove Language" Width="110"
-                        Click="RemoveBtn_click"/>
+                            Command="{Binding RemoveLanguage}"/>
                 </StackPanel>
             </StackPanel>
             <DataGrid x:Name="languagesGrid"
                   ItemsSource="{Binding Languages}"
+                  SelectedItem="{Binding SelectedLanguage}"
                   AutoGenerateColumns="False"
                   HeadersVisibility="Column"
                   GridLinesVisibility="Horizontal"
