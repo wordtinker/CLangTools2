@@ -125,5 +125,10 @@ namespace Models
                 Maybe = 50,
                 Unknown = 5000 }));
         }
+
+        public ILingva CreateLanguage(string name, string folder)
+        {
+            return new Lingva { Language = name, Folder = folder };
+        }
     }
 }

@@ -42,7 +42,8 @@
                 </Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
                     <Button Content="Add Language" Width="110" Margin="0,0,10,0"
-                        Click="AddBtn_click" IsEnabled="{Binding AllPropertiesValid}"/>
+                            Command="{Binding AddLanguage}"
+                            IsEnabled="{Binding AllPropertiesValid}"/>
                     <Button Content="Remove Language" Width="110"
                         Click="RemoveBtn_click"/>
                 </StackPanel>

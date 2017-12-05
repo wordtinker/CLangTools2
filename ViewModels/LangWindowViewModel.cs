@@ -10,7 +10,6 @@ using Prism.Commands;
 
 namespace ViewModels
 {
-    // TODO separate into class?
     public class LangWindowViewModel : BindableBase, IDataErrorInfo
     {
         //Members
@@ -18,11 +17,13 @@ namespace ViewModels
         private IUIBaseService windowService;
         private IValidate validator;
         private ICommand getFolder;
+        private ICommand addLanguage;
+        private string language;
         private string folder;
-
         // Used for IDataErrorInfo
         private Dictionary<string, bool> validProperties = new Dictionary<string, bool>();
         private bool allPropertiesValid = false;
+
         // Properties
         public bool AllPropertiesValid
         {
@@ -30,7 +31,11 @@ namespace ViewModels
             set => SetProperty(ref allPropertiesValid, value);
         }
         public ObservableCollection<LingvaViewModel> Languages { get => mediatorVM.Languages; }
-        public string Language { get; set; }
+        public string Language
+        {
+            get => language;
+            set => SetProperty(ref language, value);
+        }
         public string Folder
         {
             get => folder;
@@ -115,6 +120,23 @@ namespace ViewModels
                         // Log.Logger.Debug(string.Format("Selected new folder for language: {0}", dirName));
                         Folder = folderName;
                     }
+                }));
+            }
+        }
+        public ICommand AddLanguage
+        {
+            get
+            {
+                return addLanguage ??
+                (addLanguage = new DelegateCommand(() =>
+                {
+                    // TODO
+                    // Log.Logger.Debug(string.Format("Requesting new language: {0}", dirName));
+                    // Pass valid language into MainViewModel
+                    mediatorVM.AddNewLanguage(Language, Folder);
+                    // Clear text controls.
+                    Language = string.Empty;
+                    Folder = string.Empty;
                 }));
             }
         }

@@ -300,6 +300,16 @@ namespace ViewModels
                 item.Highlighted = true;
             }
         }
+        /// <summary>
+        /// Adds new language to viewmodel and model.
+        /// </summary>
+        public void AddNewLanguage(string name, string folder)
+        {
+            logger.Log("Adding new language.", Category.Debug, Priority.Medium);
+            ILingva newLang = dataProvider.CreateLanguage(name, folder);
+            // TODO move to LangWindow?
+            Languages.Add(new LingvaViewModel(newLang));
+        }
         // Commands
         public ICommand ManageLanguages
         {

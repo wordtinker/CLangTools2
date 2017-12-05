@@ -11,21 +11,6 @@ namespace LangTools
         {
             InitializeComponent();
         }
-        /// <summary>
-        /// Sends newly created language object to mainViewModel
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void AddBtn_click(object sender, RoutedEventArgs e)
-        {
-            // TODO STUB
-            //// Pass valid language into MainViewModel
-            //LingvaViewModel lang = (LingvaViewModel)newLanguage.DataContext;
-            //((MainViewModel)base.DataContext).AddNewLanguage(lang);
-            //// Clear text controls.
-            //langEdit.Clear();
-            //folderEdit.Clear();
-        }
 
         /// <summary>
         /// Asks mainViewModel to remove selected language.
