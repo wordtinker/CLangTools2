@@ -320,8 +320,6 @@ namespace ViewModels
             dataProvider.RemoveLanguage(lang);
             Languages.Remove(languageViewModel);
             // TODO can it be simplified and moved to LangWindow?
-            // Adjust lang selection if current language was deleted
-            if (CurrentLanguage == null && Languages.Count > 0) CurrentLanguage = Languages[0];
         }
         // Commands
         public ICommand ManageLanguages
