@@ -14,6 +14,20 @@ namespace LangTools
             this.mainWindow = mainWindow;
         }
 
+        public bool SelectFolder(out string folderName)
+        {
+            // Have to use windows forms.
+            var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                folderName = dialog.SelectedPath;
+                return true;
+            }
+            folderName = string.Empty;
+            return false;
+        }
+
         public void ManageLanguages()
         {
             // TODO more elegant ? model.getvalidator?

@@ -5,6 +5,7 @@ namespace ViewModels.Interfaces
     // TODO check usage
     public interface IUIBaseService
     {
+        bool SelectFolder(out string folderName);
         //void ShowMessage(string message);
         //bool Confirm(string message);
         //void BeginInvoke(Action method);

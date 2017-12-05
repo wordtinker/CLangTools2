@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Models.Interfaces;
 using ViewModels.Interfaces;
+using System.Windows.Input;
+using Prism.Commands;
 
 namespace ViewModels
 {
@@ -15,6 +17,8 @@ namespace ViewModels
         private MainViewModel mediatorVM;
         private IUIBaseService windowService;
         private IValidate validator;
+        private ICommand getFolder;
+        private string folder;
 
         // Used for IDataErrorInfo
         private Dictionary<string, bool> validProperties = new Dictionary<string, bool>();
@@ -27,7 +31,11 @@ namespace ViewModels
         }
         public ObservableCollection<LingvaViewModel> Languages { get => mediatorVM.Languages; }
         public string Language { get; set; }
-        public string Folder { get; set; }
+        public string Folder
+        {
+            get => folder;
+            set => SetProperty(ref folder, value);
+        }
         // ctor
         public LangWindowViewModel(MainViewModel mediatorVM, IUIBaseService windowService, IValidate validator)
         {
@@ -93,5 +101,22 @@ namespace ViewModels
             }
         }
         public string Error => throw new NotImplementedException();
+        // Commands
+        public ICommand GetFolder
+        {
+            get
+            {
+                return getFolder ??
+                (getFolder = new DelegateCommand(() =>
+                {
+                    if (windowService.SelectFolder(out string folderName))
+                    {
+                        // TODO
+                        // Log.Logger.Debug(string.Format("Selected new folder for language: {0}", dirName));
+                        Folder = folderName;
+                    }
+                }));
+            }
+        }
     }
 }

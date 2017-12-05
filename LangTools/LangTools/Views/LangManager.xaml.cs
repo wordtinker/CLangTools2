@@ -42,26 +42,5 @@ namespace LangTools
 
             //}
         }
-
-        /// <summary>
-        /// Runs standard select Folder dialog, stores selected folder.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FolderBtn_click(object sender, RoutedEventArgs e)
-        {
-            // TODO STUB
-            //// Have to use windows forms.
-            //var dialog = new System.Windows.Forms.FolderBrowserDialog();
-            //System.Windows.Forms.DialogResult result = dialog.ShowDialog();
-            //if (result == System.Windows.Forms.DialogResult.OK)
-            //{
-            //    string dirName = dialog.SelectedPath;
-
-            //    Log.Logger.Debug(string.Format("Selected new folder for language: {0}", dirName));
-
-            //    folderEdit.Text = dirName;
-            //}
-        }
     }
 }

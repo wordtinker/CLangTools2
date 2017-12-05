@@ -339,8 +339,8 @@ namespace ViewModels
             get
             {
                 return runProject ??
-                (runProject = new DelegateCommand(
-                    async () => await HandleAnalysis())
+                (runProject = new DelegateCommand(async () =>
+                    await HandleAnalysis())
                     .ObservesProperty(() => Files)
                     .ObservesProperty(() => ReadyToRun)
                     .ObservesCanExecute(() => CanRunAnalysis)
