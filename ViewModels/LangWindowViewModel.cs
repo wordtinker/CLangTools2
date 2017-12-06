@@ -11,56 +11,26 @@ using Prism.Commands;
 
 namespace ViewModels
 {
-    // TODO Partial
-    public class LangWindowViewModel : BindableBase, IDataErrorInfo
+    /// <summary>
+    /// Part of the class that implements IDataErrorInfo
+    /// </summary>
+    public partial class LangWindowViewModel : IDataErrorInfo
     {
-        //Members
-        private MainViewModel mediatorVM;
-        private IUIBaseService windowService;
+        // Members
         private IValidate validator;
-        private IDataProvider dataProvider;
-        private ILoggerFacade logger;
-
-        private ICommand getFolder;
-        private ICommand addLanguage;
-        private ICommand removeLanguage;
-        private string language;
-        private string folder;
-        // Used for IDataErrorInfo
-        private Dictionary<string, bool> validProperties = new Dictionary<string, bool>();
+        private Dictionary<string, bool> validProperties = new Dictionary<string, bool>()
+        {
+            {"Language", false },
+            {"Folder", false}
+        };
         private bool allPropertiesValid = false;
-
         // Properties
         public bool AllPropertiesValid
         {
             get => allPropertiesValid;
             set => SetProperty(ref allPropertiesValid, value);
         }
-        public ObservableCollection<LingvaViewModel> Languages { get => mediatorVM.Languages; }
-        public LingvaViewModel SelectedLanguage { get; set; }
-        public string Language
-        {
-            get => language;
-            set => SetProperty(ref language, value);
-        }
-        public string Folder
-        {
-            get => folder;
-            set => SetProperty(ref folder, value);
-        }
-        // ctor
-        public LangWindowViewModel(MainViewModel mediatorVM, IUIBaseService windowService,
-            IValidate validator, IDataProvider dataProvider, ILoggerFacade logger)
-        {
-            this.mediatorVM = mediatorVM;
-            this.windowService = windowService;
-            this.validator = validator;
-            this.dataProvider = dataProvider;
-            this.logger = logger;
-            validProperties.Add("Language", false);
-            validProperties.Add("Folder", false);
-        }
-        // methods
+        // Methods
         private void ValidateProperties()
         {
             foreach (bool isValid in validProperties.Values)
@@ -73,7 +43,6 @@ namespace ViewModels
             }
             AllPropertiesValid = true;
         }
-
         // IDataErrorInfo Implementation
         public string this[string propertyName]
         {
@@ -116,6 +85,46 @@ namespace ViewModels
             }
         }
         public string Error => throw new NotImplementedException();
+    }
+    /// <summary>
+    /// Part of the class that provides data for a View.
+    /// </summary>
+    public partial class LangWindowViewModel : BindableBase
+    {
+        //Members
+        private MainViewModel mediatorVM;
+        private IUIBaseService windowService;
+        private IDataProvider dataProvider;
+        private ILoggerFacade logger;
+        private ICommand getFolder;
+        private ICommand addLanguage;
+        private ICommand removeLanguage;
+        private string language;
+        private string folder;
+
+        // Properties
+        public ObservableCollection<LingvaViewModel> Languages { get => mediatorVM.Languages; }
+        public LingvaViewModel SelectedLanguage { get; set; }
+        public string Language
+        {
+            get => language;
+            set => SetProperty(ref language, value);
+        }
+        public string Folder
+        {
+            get => folder;
+            set => SetProperty(ref folder, value);
+        }
+        // ctor
+        public LangWindowViewModel(MainViewModel mediatorVM, IUIBaseService windowService,
+            IValidate validator, IDataProvider dataProvider, ILoggerFacade logger)
+        {
+            this.mediatorVM = mediatorVM;
+            this.windowService = windowService;
+            this.validator = validator;
+            this.dataProvider = dataProvider;
+            this.logger = logger;
+        }
         // Commands
         public ICommand GetFolder
         {
