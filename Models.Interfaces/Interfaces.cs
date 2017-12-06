@@ -46,7 +46,6 @@ namespace Models.Interfaces
     {
         string Name { get; set; }
     }
-    // TODO document 
     public interface IDataProvider
     {
         IEnumerable<ILingva> GetLanguages();

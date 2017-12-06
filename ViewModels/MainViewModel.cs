@@ -136,7 +136,6 @@ namespace ViewModels
             {
                 Languages.Add(new LingvaViewModel(lang));
             }
-            // TODO should we move it to View?
             CurrentLanguage = Languages.Count > 0 ? Languages[0] : null;
             ProgressValue = 100;
         }

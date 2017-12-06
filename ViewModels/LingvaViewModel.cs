@@ -19,22 +19,5 @@ namespace ViewModels
         {
             currentLanguage = language;
         }
-
-        // Equals override
-        // TODO redo
-        public override bool Equals(object obj)
-        {
-            LingvaViewModel item = obj as LingvaViewModel;
-            if (item == null)
-            {
-                return false;
-            }
-            return this.currentLanguage.Equals(item.currentLanguage);
-        }
-
-        public override int GetHashCode()
-        {
-            return currentLanguage.GetHashCode();
-        }
     }
 }

@@ -50,7 +50,6 @@ namespace Models
 
     public class FileStats : IFileStats
     {
-        // TODO must implement Equals
         public string FileName { get; internal set; }
         public string FilePath { get; internal set; }
 
@@ -58,20 +57,19 @@ namespace Models
         public int? Known { get; set; }
         public int? Maybe { get; set; }
         public int? Unknown { get; set; }
-        // Overrided Equals
+        // Override Equals
         public override bool Equals(object obj)
         {
-            if (obj is FileStats item)
+            if (obj is FileStats other)
             {
-                string baseLine = FilePath ?? string.Empty;
-                return baseLine.Equals(item.FilePath);
+                // valid filepath is never empty
+                return FilePath.Equals(other.FilePath);
             }
             return false;
         }
         public override int GetHashCode()
         {
-            string baseLine = FilePath ?? string.Empty;
-            // TODO hash of empty string
+            // valid filepath is never empty
             return FilePath.GetHashCode();
         }
     }
@@ -80,6 +78,20 @@ namespace Models
         public string FileName { get; set; }
         public DictType DictType { get; set; }
         public string FilePath { get; set; }
+        public override bool Equals(object obj)
+        {
+            if (obj is Dict other)
+            {
+                // Valid filepath is never empty
+                return this.FilePath.Equals(other.FilePath);
+            }
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            // Valid filepath is never empty
+            return FilePath.GetHashCode();
+        }
     }
     public class Lingva : ILingva
     {
@@ -111,14 +123,24 @@ namespace Models
         }
         public IEnumerable<IFileStats> GetProjectFiles(IProject project)
         {
-            yield return new FileStats {
+            yield return new FileStats
+            {
                 FileName = "test.txt",
                 FilePath = "test.txt",
                 Size = 1000,
                 Known = 900,
                 Maybe = 50,
-                Unknown = 50 };
-            yield return new FileStats { };
+                Unknown = 50
+            };
+            yield return new FileStats
+            {
+                FileName = "test2.txt",
+                FilePath = "test2.txt",
+                Size = 15847,
+                Known = 900,
+                Maybe = 50,
+                Unknown = 50
+            };
         }
 
         public IEnumerable<(string, int)> GetUnknownWords(IFileStats fileStats)
@@ -134,7 +156,15 @@ namespace Models
 
         public IEnumerable<IFileStats> GetFilesWithWord(string word)
         {
-            yield return new FileStats { FileName = "test.txt", Size = 1000, Known = 900, Maybe = 50, Unknown = 50 };
+            yield return new FileStats
+            {
+                FileName = "test.txt",
+                FilePath = "test.txt",
+                Size = 1000,
+                Known = 900,
+                Maybe = 50,
+                Unknown = 50
+            };
         }
 
         public void Analyze(IProject project, System.IProgress<(double Progress, IFileStats FileStats)> progress)

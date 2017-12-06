@@ -54,9 +54,9 @@ namespace ViewModels
         // for .Intersect and deletion from Collections
         public override bool Equals(object obj)
         {
-            if (obj is FileStatsViewModel item)
+            if (obj is FileStatsViewModel other)
             {
-                return this.fileStats.Equals(item.fileStats);
+                return this.fileStats.Equals(other.fileStats);
             }
             return false;
         }
