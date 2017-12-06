@@ -32,7 +32,8 @@ namespace LangTools
         {
             // TODO more elegant ? model.getvalidator?
             LangWindowViewModel vm = new LangWindowViewModel(
-                (MainViewModel)mainWindow.DataContext, this, new LingvaValidator());
+                (MainViewModel)mainWindow.DataContext, this, new LingvaValidator(),
+                new StubModel(), App.Logger);
             LangManager window = new LangManager
             {
                 DataContext = vm,

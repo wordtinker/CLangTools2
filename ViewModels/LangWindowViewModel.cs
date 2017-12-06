@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Logging;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,12 +11,16 @@ using Prism.Commands;
 
 namespace ViewModels
 {
+    // TODO Partial
     public class LangWindowViewModel : BindableBase, IDataErrorInfo
     {
         //Members
         private MainViewModel mediatorVM;
         private IUIBaseService windowService;
         private IValidate validator;
+        private IDataProvider dataProvider;
+        private ILoggerFacade logger;
+
         private ICommand getFolder;
         private ICommand addLanguage;
         private ICommand removeLanguage;
@@ -44,11 +49,14 @@ namespace ViewModels
             set => SetProperty(ref folder, value);
         }
         // ctor
-        public LangWindowViewModel(MainViewModel mediatorVM, IUIBaseService windowService, IValidate validator)
+        public LangWindowViewModel(MainViewModel mediatorVM, IUIBaseService windowService,
+            IValidate validator, IDataProvider dataProvider, ILoggerFacade logger)
         {
             this.mediatorVM = mediatorVM;
             this.windowService = windowService;
             this.validator = validator;
+            this.dataProvider = dataProvider;
+            this.logger = logger;
             validProperties.Add("Language", false);
             validProperties.Add("Folder", false);
         }
@@ -118,8 +126,8 @@ namespace ViewModels
                 {
                     if (windowService.SelectFolder(out string folderName))
                     {
-                        // TODO
-                        // Log.Logger.Debug(string.Format("Selected new folder for language: {0}", dirName));
+                        logger.Log(string.Format("Selected new folder for language: {0}", folderName),
+                            Category.Debug, Priority.Medium);
                         Folder = folderName;
                     }
                 }));
@@ -132,10 +140,9 @@ namespace ViewModels
                 return addLanguage ??
                 (addLanguage = new DelegateCommand(() =>
                 {
-                    // TODO
-                    // Log.Logger.Debug(string.Format("Requesting new language: {0}", dirName));
-                    // Pass valid language into MainViewModel
-                    mediatorVM.AddNewLanguage(Language, Folder);
+                    logger.Log("Adding new language.", Category.Debug, Priority.Medium);
+                    ILingva newLang = dataProvider.CreateLanguage(Language, Folder);
+                    Languages.Add(new LingvaViewModel(newLang));
                     // Clear text controls.
                     Language = string.Empty;
                     Folder = string.Empty;
@@ -151,12 +158,13 @@ namespace ViewModels
                 {
                     if (SelectedLanguage != null)
                     {
-                        // TODO
-                        // Log.Logger.Debug(string.Format("Delete new language: {0}", dirName));
-                        mediatorVM.RemoveLanguage(SelectedLanguage);
+                        logger.Log(string.Format("Removing language: {0}.", SelectedLanguage.Language),
+                            Category.Debug, Priority.Medium);
+                        ILingva lang = SelectedLanguage.Lingva;
+                        dataProvider.RemoveLanguage(lang);
+                        Languages.Remove(SelectedLanguage);
                     }
                 }));
-
             }
         }
     }
