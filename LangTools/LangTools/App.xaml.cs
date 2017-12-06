@@ -72,7 +72,7 @@ namespace LangTools
             };
             // Inject dependencies
             IUIMainWindowService service = new MainWindowService(MainWindow);
-            IDataProvider dataProvider = new StubModel();
+            IDataProvider dataProvider = ModelFactory.Model;
             MainWindow.DataContext = new MainViewModel(service, dataProvider, Logger);
             MainWindow.Show();
         }

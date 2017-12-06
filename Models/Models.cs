@@ -3,6 +3,29 @@ using Models.Interfaces;
 
 namespace Models
 {
+    public static class ModelFactory
+    {
+        private static IDataProvider dataProvider;
+        private static IValidate validator;
+
+        public static IDataProvider Model
+        {
+            get
+            {
+                return dataProvider ??
+                    (dataProvider = new StubModel());
+            }
+        }
+        public static IValidate Validtor
+        {
+            get
+            {
+                return validator ??
+                    (validator = new LingvaValidator());
+            }
+        }
+    }
+
     public class LingvaValidator : IValidate
     {
         public ValidationError ValidateLanguageName(string langName)
