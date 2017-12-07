@@ -93,7 +93,7 @@ namespace ViewModels
     {
         //Members
         private MainViewModel mediatorVM;
-        private IUIBaseService windowService;
+        private IUIMainWindowService windowService;
         private IDataProvider dataProvider;
         private ILoggerFacade logger;
         private ICommand getFolder;
@@ -116,7 +116,7 @@ namespace ViewModels
             set => SetProperty(ref folder, value);
         }
         // ctor
-        public LangWindowViewModel(MainViewModel mediatorVM, IUIBaseService windowService,
+        public LangWindowViewModel(MainViewModel mediatorVM, IUIMainWindowService windowService,
             IValidate validator, IDataProvider dataProvider, ILoggerFacade logger)
         {
             this.mediatorVM = mediatorVM;

@@ -202,15 +202,16 @@
                               >
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Open Dictionary" Click="DictContextMenu_ClickOpen"/>
+                                <MenuItem Header="Open Dictionary" Command="{Binding OpenFile}"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
+                                                             Path=PlacementTarget.SelectedItem.FilePath}"/>
                                 <MenuItem Header="Delete Dictionary" Click="DictContextMenu_ClickDelete"/>
                             </ContextMenu>
                         </DataGrid.ContextMenu>
-                        <DataGrid.Resources>
-                            <Style TargetType="DataGridRow">
-                                <EventSetter Event="MouseDoubleClick" Handler="DictsRow_DoubleClick"/>
-                            </Style>
-                        </DataGrid.Resources>
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding OpenFile}"
+                                          CommandParameter="{Binding ElementName=dictsGrid, Path=SelectedItem.FilePath}"/>
+                        </DataGrid.InputBindings>
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Width="*" Binding="{Binding FileName}"/>
                             <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding DictType}"/>

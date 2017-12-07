@@ -46,15 +46,6 @@ namespace ViewModels
     //        this.currentDictionary = dictionary;
     //    }
 
-    //    // Methods
-    //    public void OpenFile()
-    //    {
-    //        if (!IOTools.OpenWithDefault(FilePath))
-    //        {
-    //            windowService.ShowMessage(string.Format("Can't open {0}.", FilePath));
-    //        }
-    //    }
-
     //    public void DeleteFile()
     //    {
     //        if (windowService.Confirm(string.Format("Do you want to delete\n {0} ?", FilePath)))

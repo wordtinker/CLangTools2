@@ -45,7 +45,7 @@ namespace LangTools
         public void ShowHelp()
         {
             MessageBox.Show("!!!");
-            // TODO STUB 3 assemblies
+            // TODO Later STUB 3 assemblies
             //string.Format("{0}: {1}", windowService.AppName, CoreAssembly.Version);
         }
         public void Shutdown()

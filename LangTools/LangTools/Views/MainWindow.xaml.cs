@@ -49,34 +49,6 @@ namespace LangTools
         }
 
         /// <summary>
-        /// Responds to doubleClick event in the dataGrid with dictionaries.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DictsRow_DoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            // TODO Later
-            //DataGridRow row = (DataGridRow)sender;
-            //// Let the view model open the dictionary.
-            //((DictViewModel)row.DataContext).OpenFile();
-        }
-
-        /// <summary>
-        /// Responds to click event in the context menu of the dataGrid with dictionaries.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DictContextMenu_ClickOpen(object sender, RoutedEventArgs e)
-        {
-            if (dictsGrid.SelectedItem is DictViewModel item)
-            {
-                // Let the view model open the dictionary.
-                // TODO Later as baseclass with open methods?
-                //item.OpenFile();
-            }
-        }
-
-        /// <summary>
         /// Responds to click event in the context menu of the dataGrid with dictionaries.
         /// </summary>
         /// <param name="sender"></param>

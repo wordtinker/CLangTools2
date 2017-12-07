@@ -34,7 +34,7 @@ namespace Models
             string lang = langName.Trim();
             if (lang.Length == 0) return ValidationError.LANGNAMEEMPTY;
             if (lang.Length != langName.Length) return ValidationError.LANGWITHSPACES;
-            // TODO
+            // TODO Later
             //if (dataProvider.LanguageExists(lang)) return ValidationError.LANGTAKEN;
             return ValidationError.NONE;
         }
@@ -42,7 +42,7 @@ namespace Models
         {
             if (langFolder == null) return ValidationError.FOLDERNAMEEMPTY;
             if (langFolder.Length == 0) return ValidationError.FOLDERNAMEEMPTY;
-            // TODO
+            // TODO Later
             //if (dataProvider.FolderExists(langFolder)) return ValidationError.FOLDERTAKEN;
             return ValidationError.NONE;
         }
@@ -119,7 +119,12 @@ namespace Models
         }
         public IEnumerable<IDict> GetProjectDictionaries(IProject project)
         {
-            yield return new Dict { DictType = DictType.General, FileName = "10000.txt", FilePath = "/test" };
+            yield return new Dict
+            {
+                DictType = DictType.General,
+                FileName = "10000.txt",
+                FilePath = @"C:\Users\Alex\Desktop\test\English\test.dct"
+            };
             yield return new Dict { DictType = DictType.Project, FileName = project.Name, FilePath = "/test" };
         }
         public IEnumerable<IFileStats> GetProjectFiles(IProject project)
