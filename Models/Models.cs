@@ -52,6 +52,7 @@ namespace Models
     {
         public string FileName { get; internal set; }
         public string FilePath { get; internal set; }
+        public string OutPath { get; internal set; }
 
         public int? Size { get; set; }
         public int? Known { get; set; }
@@ -126,7 +127,8 @@ namespace Models
             yield return new FileStats
             {
                 FileName = "test.txt",
-                FilePath = "test.txt",
+                FilePath = @"C:\Users\Alex\Desktop\test\English\test.txt",
+                OutPath = @"C:\Users\Alex\Desktop\test\English\test.html",
                 Size = 1000,
                 Known = 900,
                 Maybe = 50,

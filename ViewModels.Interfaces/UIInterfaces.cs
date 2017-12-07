@@ -6,7 +6,6 @@ namespace ViewModels.Interfaces
     public interface IUIBaseService
     {
         bool SelectFolder(out string folderName);
-        //void ShowMessage(string message);
         //bool Confirm(string message);
         //void BeginInvoke(Action method);
     }
@@ -19,6 +18,8 @@ namespace ViewModels.Interfaces
         //string CorpusDir { get; }
         //string DicDir { get; }
         //string OutDir { get; }
+        bool OpenFile(string path);
+        void ShowMessage(string message);
         void ManageLanguages();
         void ShowHelp();
         void Shutdown();

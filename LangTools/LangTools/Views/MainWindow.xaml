@@ -110,16 +110,23 @@
                               BorderThickness="0">
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Open File" Click="FilesContextMenu_ClickOpenFile"/>
-                                <MenuItem Header="Open Output File" Click="FilesContextMenu_ClickOpenOutput"/>
+                                <MenuItem Header="Open File" Command="{Binding OpenFile}"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
+                                                             Path=PlacementTarget.SelectedItem.FilePath}"/>
+                                <MenuItem Header="Open Output File" Command="{Binding OpenFile}"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
+                                                             Path=PlacementTarget.SelectedItem.OutPath}"/>
                                 <Separator/>
                                 <MenuItem Header="Delete File" Click="FilesContextMenu_ClickDeleteFile"/>
                                 <MenuItem Header="Delete Output File" Click="FilesContextMenu_ClickDeleteOutput"/>
                             </ContextMenu>
                         </DataGrid.ContextMenu>
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding OpenFile}"
+                                          CommandParameter="{Binding ElementName=filesGrid, Path=SelectedItem.OutPath}"/>
+                        </DataGrid.InputBindings>
                         <DataGrid.Resources>
                             <Style TargetType="DataGridRow">
-                                <EventSetter Event="MouseDoubleClick" Handler="FilesRow_DoubleClick"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Highlighted}" Value="true">
                                         <Setter Property="Background" Value="{StaticResource HlBrush}" />

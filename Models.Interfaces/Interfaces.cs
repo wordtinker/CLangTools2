@@ -21,6 +21,7 @@ namespace Models.Interfaces
     {
         string FileName { get; }
         string FilePath { get; }
+        string OutPath { get; }
         int? Size { get; set; }
         int? Known { get; set; }
         int? Maybe { get; set; }

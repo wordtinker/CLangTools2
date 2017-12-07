@@ -21,6 +21,7 @@ namespace ViewModels
         private ICommand exitApp;
         private ICommand showHelp;
         private ICommand runProject;
+        private ICommand openFile;
         private LingvaViewModel currentLanguage; 
         private ProjectViewModel currentProject;
         private FileStatsViewModel currentFile;
@@ -345,6 +346,23 @@ namespace ViewModels
                     .ObservesProperty(() => ReadyToRun)
                     .ObservesCanExecute(() => CanRunAnalysis)
                 );
+            }
+        }
+        public ICommand OpenFile
+        {
+            get
+            {
+                return openFile ??
+                (openFile = new DelegateCommand<object>((object parameter) =>
+                {
+                    if (parameter is string filePath)
+                    {
+                        if (!windowService.OpenFile(filePath))
+                        {
+                            windowService.ShowMessage(string.Format("Can't open {0}.", filePath));
+                        }
+                    }
+                }));
             }
         }
     }

@@ -2,6 +2,7 @@
 using ViewModels.Interfaces;
 using ViewModels;
 using Models;
+using System;
 
 namespace LangTools
 {
@@ -51,6 +52,27 @@ namespace LangTools
         {
             App.Current.Shutdown();
         }
-        // TODO
+
+        /// <summary>
+        /// Opens the file in the associated application.
+        /// </summary>
+        /// <param name="path"></param>
+        public bool OpenFile(string path)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(path);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public void ShowMessage(string message)
+        {
+            MessageBox.Show(message);
+        }
     }
 }

@@ -13,6 +13,8 @@ namespace ViewModels
 
         public IFileStats FileStats { get => fileStats; }
         public string FileName { get => fileStats.FileName; }
+        public string FilePath { get => fileStats.FilePath; }
+        public string OutPath { get => fileStats.OutPath; }
         public int? Size { get; private set; }
         public int? Known { get; private set; }
         public int? Unknown { get; private set; }
@@ -68,43 +70,9 @@ namespace ViewModels
     // TODO STUB
     //public class FileStatsViewModel : BindableBase
     //{
-    //    private IUIBaseService windowService;
 
-
-    //    public string FilePath { get { return fileStats.FilePath; } }
     //    public Lingva Lingva { get { return fileStats.Lingva; } }
     //    public string Project { get { return fileStats.Project; } }
-    //    public string OutPath { get { return fileStats.OutPath; } }
-
-    //    public FileStatsViewModel(IUIBaseService windowService, FileStats fileStats)
-    //    {
-    //        this.windowService = windowService;
-    //        this.fileStats = fileStats;
-    //        this.fileStats.PropertyChanged += (obj, e) =>
-    //        {
-    //            // Raise all properties changed
-    //            RaisePropertyChanged(string.Empty);
-    //        };
-    //    }
-
-    //    public void OpenOutput()
-    //    {
-    //        if (OutPath != null)
-    //        {
-    //            if (!IOTools.OpenWithDefault(OutPath))
-    //            {
-    //                windowService.ShowMessage(string.Format("Can't open {0}.", OutPath));
-    //            }
-    //        }
-    //    }
-
-    //    public void OpenFile()
-    //    {
-    //        if (!IOTools.OpenWithDefault(FilePath))
-    //        {
-    //            windowService.ShowMessage(string.Format("Can't open {0}.", FilePath));
-    //        }
-    //    }
 
     //    public void DeleteOutput()
     //    {

@@ -19,49 +19,6 @@ namespace LangTools
         }
 
         /// <summary>
-        /// Responds to DoubleClick even in the dataGrid with files.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FilesRow_DoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            // TODO Later
-            //DataGridRow row = (DataGridRow)sender;
-            //// Let the view model open the report file.
-            //((FileStatsViewModel)row.DataContext).OpenOutput();
-        }
-
-        /// <summary>
-        /// Responds to click event in the context menu of the dataGrid with files.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FilesContextMenu_ClickOpenFile(object sender, RoutedEventArgs e)
-        {
-            if (filesGrid.SelectedItem is FileStatsViewModel item)
-            {
-                // Let the view model open origin file.
-                // TODO Later
-                //item.OpenFile();
-            }
-        }
-
-        /// <summary>
-        /// Responds to click event in the context menu of the dataGrid with files.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FilesContextMenu_ClickOpenOutput(object sender, RoutedEventArgs e)
-        {
-            if (filesGrid.SelectedItem is FileStatsViewModel item)
-            {
-                // Let the view model open report file.
-                // TODO Later
-                //item.OpenOutput();
-            }
-        }
-
-        /// <summary>
         /// Responds to click event in the context menu of the dataGrid with files.
         /// </summary>
         /// <param name="sender"></param>
