@@ -22,6 +22,7 @@ namespace ViewModels
         private ICommand showHelp;
         private ICommand runProject;
         private ICommand openFile;
+        private ICommand deleteFile;
         private LingvaViewModel currentLanguage; 
         private ProjectViewModel currentProject;
         private FileStatsViewModel currentFile;
@@ -361,6 +362,35 @@ namespace ViewModels
                         {
                             windowService.ShowMessage(string.Format("Can't open {0}.", filePath));
                         }
+                    }
+                }));
+            }
+        }
+        public ICommand DeleteFile
+        {
+            get
+            {
+                return deleteFile ??
+                (deleteFile = new DelegateCommand<object>((object parameter) =>
+                {
+                    string path = parameter as string;
+                    if (path == null) return;
+                    if (!windowService.Confirm(string.Format("Do you want to delete\n {0} ?", path))) return;
+                    
+                    if (dataProvider.DeleteFile(path, out IFile fs))
+                    {
+                        if (fs is IFileStats ifs)
+                        {
+                            Files.Remove(new FileStatsViewModel(ifs));
+                        }
+                        else if (fs is IDict ids)
+                        {
+                            Dictionaries.Remove(new DictViewModel(ids));
+                        }
+                    }
+                    else
+                    {
+                        windowService.ShowMessage(string.Format("Can't delete {0}.", path));
                     }
                 }));
             }

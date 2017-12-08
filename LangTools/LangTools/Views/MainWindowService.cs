@@ -74,5 +74,15 @@ namespace LangTools
         {
             MessageBox.Show(message);
         }
+
+        public bool Confirm(string message)
+        {
+            MessageBoxResult result = MessageBox.Show(
+                message,
+                "Confirmation",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+            return (result == MessageBoxResult.Yes);
+        }
     }
 }

@@ -117,8 +117,12 @@
                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
                                                              Path=PlacementTarget.SelectedItem.OutPath}"/>
                                 <Separator/>
-                                <MenuItem Header="Delete File" Click="FilesContextMenu_ClickDeleteFile"/>
-                                <MenuItem Header="Delete Output File" Click="FilesContextMenu_ClickDeleteOutput"/>
+                                <MenuItem Header="Delete File" Command="{Binding DeleteFile}"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
+                                                             Path=PlacementTarget.SelectedItem.FilePath}"/>
+                                <MenuItem Header="Delete Output File" Command="{Binding DeleteFile}"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
+                                                             Path=PlacementTarget.SelectedItem.OutPath}"/>                                          
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.InputBindings>

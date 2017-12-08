@@ -195,5 +195,12 @@ namespace Models
         {
             // DO nothing
         }
+
+        public bool DeleteFile(string path, out IFile file)
+        {
+            file = new FileStats {FilePath = path };
+            // Do deletion based on path.ext 
+            return true;
+        }
     }
 }

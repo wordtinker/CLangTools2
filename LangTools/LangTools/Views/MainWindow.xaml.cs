@@ -19,36 +19,6 @@ namespace LangTools
         }
 
         /// <summary>
-        /// Responds to click event in the context menu of the dataGrid with files.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FilesContextMenu_ClickDeleteFile(object sender, RoutedEventArgs e)
-        {
-            if (filesGrid.SelectedItem is FileStatsViewModel item)
-            {
-                // Let the view model delete the origin file.
-                // TODO Later
-                //item.DeleteFile();
-            }
-        }
-
-        /// <summary>
-        /// Responds to click event in the context menu of the dataGrid with files.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FilesContextMenu_ClickDeleteOutput(object sender, RoutedEventArgs e)
-        {
-            if (filesGrid.SelectedItem is FileStatsViewModel item)
-            {
-                // Let the view model delete the report file.
-                // TODO Later
-                //item.DeleteOutput();
-            }
-        }
-
-        /// <summary>
         /// Responds to click event in the context menu of the dataGrid with dictionaries.
         /// </summary>
         /// <param name="sender"></param>

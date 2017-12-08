@@ -29,32 +29,4 @@ namespace ViewModels
             return dictionary.GetHashCode();
         }
     }
-
-    // TODO STUB
-    ///// <summary>
-    ///// Represents dictionary file.
-    ///// </summary>
-    //public class DictViewModel
-    //{
-    //    // Members
-    //    private IUIBaseService windowService;
-
-    //    // Constructors
-    //    public DictViewModel(IUIBaseService windowService, Dict dictionary)
-    //    {
-    //        this.windowService = windowService;
-    //        this.currentDictionary = dictionary;
-    //    }
-
-    //    public void DeleteFile()
-    //    {
-    //        if (windowService.Confirm(string.Format("Do you want to delete\n {0} ?", FilePath)))
-    //        {
-    //            if (!IOTools.DeleteFile(FilePath))
-    //            {
-    //                windowService.ShowMessage(string.Format("Can't delete {0}.", FilePath));
-    //            }
-    //        }
-    //    }
-    //}
 }

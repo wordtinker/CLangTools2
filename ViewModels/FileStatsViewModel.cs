@@ -67,36 +67,4 @@ namespace ViewModels
             return fileStats.GetHashCode();
         }
     }
-    // TODO STUB
-    //public class FileStatsViewModel : BindableBase
-    //{
-
-    //    public Lingva Lingva { get { return fileStats.Lingva; } }
-    //    public string Project { get { return fileStats.Project; } }
-
-    //    public void DeleteOutput()
-    //    {
-    //        if (OutPath != null && windowService.Confirm(string.Format("Do you want to delete\n {0} ?", OutPath)))
-    //        {
-    //            if (!IOTools.DeleteFile(OutPath))
-    //            {
-    //                windowService.ShowMessage(string.Format("Can't delete {0}.", OutPath));
-    //            }
-    //        }
-    //    }
-
-    //    public void DeleteFile()
-    //    {
-    //        // Model will be updated after FileWatcher catches the event
-    //        if (windowService.Confirm(string.Format("Do you want to delete\n {0} ?", FilePath)))
-    //        {
-    //            if (!IOTools.DeleteFile(FilePath))
-    //            {
-    //                windowService.ShowMessage(string.Format("Can't delete {0}.", FilePath));
-    //            }
-    //        }
-    //        // Delete output file together
-    //        DeleteOutput();
-    //    }
-    //}
 }
