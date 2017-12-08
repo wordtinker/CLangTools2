@@ -19,21 +19,6 @@ namespace LangTools
         }
 
         /// <summary>
-        /// Responds to click event in the context menu of the dataGrid with dictionaries.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DictContextMenu_ClickDelete(object sender, RoutedEventArgs e)
-        {
-            if (dictsGrid.SelectedItem is DictViewModel item)
-            {
-                // Let the view model delete the dicionary.
-                // TODO Later
-                //item.DeleteFile();
-            }
-        }
-
-        /// <summary>
         /// Responds to doubleClick event in the dataGrid with words.
         /// </summary>
         /// <param name="sender"></param>

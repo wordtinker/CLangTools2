@@ -198,8 +198,15 @@ namespace Models
 
         public bool DeleteFile(string path, out IFile file)
         {
-            file = new FileStats {FilePath = path };
-            // Do deletion based on path.ext 
+            // Do deletion based on path.ext
+            if (path.EndsWith(".dct"))
+            {
+                file = new Dict { FilePath = path };
+            }
+            else
+            {
+                file = new FileStats { FilePath = path };
+            }
             return true;
         }
     }
