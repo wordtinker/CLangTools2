@@ -122,15 +122,12 @@
                                                              Path=PlacementTarget.SelectedItem.FilePath}"/>
                                 <MenuItem Header="Delete Output File" Command="{Binding DeleteFile}"
                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
-                                                             Path=PlacementTarget.SelectedItem.OutPath}"/>                                          
+                                                             Path=PlacementTarget.SelectedItem.OutPath}"/>
                             </ContextMenu>
                         </DataGrid.ContextMenu>
-                        <DataGrid.InputBindings>
-                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding OpenFile}"
-                                          CommandParameter="{Binding ElementName=filesGrid, Path=SelectedItem.OutPath}"/>
-                        </DataGrid.InputBindings>
                         <DataGrid.Resources>
                             <Style TargetType="DataGridRow">
+                                <EventSetter Event="MouseDoubleClick" Handler="FilesRow_DoubleClick"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Highlighted}" Value="true">
                                         <Setter Property="Background" Value="{StaticResource HlBrush}" />

@@ -17,7 +17,23 @@ namespace LangTools
             InitializeComponent();
             App.Logger.Log("MainWindow has started.", Category.Debug, Priority.Medium);
         }
-
+        /// <summary>
+        /// Responds to DoubleClick even in the dataGrid with files.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FilesRow_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is DataGridRow row && row.DataContext is FileStatsViewModel fsvm)
+            {
+                // Let the view model open the output file.
+                MainViewModel vm = (MainViewModel)base.DataContext;
+                if (vm.OpenFile.CanExecute(null))
+                {
+                    vm.OpenFile.Execute(fsvm.OutPath);
+                }
+            }
+        }
         /// <summary>
         /// Responds to doubleClick event in the dataGrid with words.
         /// </summary>
