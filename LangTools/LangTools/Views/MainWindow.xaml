@@ -211,10 +211,11 @@
                                                              Path=PlacementTarget.SelectedItem.FilePath}"/>
                             </ContextMenu>
                         </DataGrid.ContextMenu>
-                        <DataGrid.InputBindings>
-                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding OpenFile}"
-                                          CommandParameter="{Binding ElementName=dictsGrid, Path=SelectedItem.FilePath}"/>
-                        </DataGrid.InputBindings>
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridRow">
+                                <EventSetter Event="MouseDoubleClick" Handler="DictsRow_DoubleClick"/>
+                            </Style>
+                        </DataGrid.Resources>
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Width="*" Binding="{Binding FileName}"/>
                             <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding DictType}"/>

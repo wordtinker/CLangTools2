@@ -35,6 +35,23 @@ namespace LangTools
             }
         }
         /// <summary>
+        /// Responds to doubleClick event in the dataGrid with dictionaries.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DictsRow_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is DataGridRow row && row.DataContext is DictViewModel dvm)
+            {
+                // Let the view model open the dictionary.
+                MainViewModel vm = (MainViewModel)base.DataContext;
+                if (vm.OpenFile.CanExecute(null))
+                {
+                    vm.OpenFile.Execute(dvm.FilePath);
+                }
+            }
+        }
+        /// <summary>
         /// Responds to doubleClick event in the dataGrid with words.
         /// </summary>
         /// <param name="sender"></param>
@@ -49,7 +66,6 @@ namespace LangTools
                 //vm.AddWordToDictionary(wordVM);
             }
         }
-
         /// <summary>
         /// Responds to MouseDown event in the dataGrid with words.
         /// </summary>
