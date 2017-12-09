@@ -127,6 +127,8 @@ namespace ViewModels
             Projects = new ObservableCollection<ProjectViewModel>();
             Dictionaries = new ObservableCollection<DictViewModel>();
             Files = new ObservableCollection<FileStatsViewModel>();
+            // Have to bind CollectionChanged event to PropertyChanged
+            Files.CollectionChanged += (sender, e) => RaisePropertyChanged(nameof(CanRunAnalysis));
             Words = new ObservableCollection<WordViewModel>();
             WordsInProject = new ObservableCollection<WordViewModel>();
             // Commands
@@ -134,7 +136,6 @@ namespace ViewModels
             ExitApp = new DelegateCommand(windowService.Shutdown);
             ShowHelp = new DelegateCommand(windowService.ShowHelp);
             RunProject = new DelegateCommand(async () => await HandleAnalysis())
-                .ObservesProperty(() => Files)
                 .ObservesProperty(() => ReadyToRun)
                 .ObservesCanExecute(() => CanRunAnalysis);
             OpenFile = new DelegateCommand<object>(_OpenFile);
