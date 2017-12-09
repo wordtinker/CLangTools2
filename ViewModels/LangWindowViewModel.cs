@@ -96,9 +96,6 @@ namespace ViewModels
         private IUIMainWindowService windowService;
         private IDataProvider dataProvider;
         private ILoggerFacade logger;
-        private ICommand getFolder;
-        private ICommand addLanguage;
-        private ICommand removeLanguage;
         private string language;
         private string folder;
 
@@ -115,6 +112,9 @@ namespace ViewModels
             get => folder;
             set => SetProperty(ref folder, value);
         }
+        public ICommand GetFolder { get; }
+        public ICommand AddLanguage { get; }
+        public ICommand RemoveLanguage { get; }
         // ctor
         public LangWindowViewModel(MainViewModel mediatorVM, IUIMainWindowService windowService,
             IValidate validator, IDataProvider dataProvider, ILoggerFacade logger)
@@ -124,56 +124,39 @@ namespace ViewModels
             this.validator = validator;
             this.dataProvider = dataProvider;
             this.logger = logger;
+            // Commands
+            GetFolder = new DelegateCommand(_GetFolder);
+            AddLanguage = new DelegateCommand(_AddLanguage);
+            RemoveLanguage = new DelegateCommand(_RemoveLanguage);
         }
-        // Commands
-        public ICommand GetFolder
+        // Methods
+        private void _GetFolder()
         {
-            get
+            if (windowService.SelectFolder(out string folderName))
             {
-                return getFolder ??
-                (getFolder = new DelegateCommand(() =>
-                {
-                    if (windowService.SelectFolder(out string folderName))
-                    {
-                        logger.Log(string.Format("Selected new folder for language: {0}", folderName),
-                            Category.Debug, Priority.Medium);
-                        Folder = folderName;
-                    }
-                }));
+                logger.Log(string.Format("Selected new folder for language: {0}", folderName),
+                    Category.Debug, Priority.Medium);
+                Folder = folderName;
             }
         }
-        public ICommand AddLanguage
+        private void _AddLanguage()
         {
-            get
-            {
-                return addLanguage ??
-                (addLanguage = new DelegateCommand(() =>
-                {
-                    logger.Log("Adding new language.", Category.Debug, Priority.Medium);
-                    ILingva newLang = dataProvider.CreateLanguage(Language, Folder);
-                    Languages.Add(new LingvaViewModel(newLang));
-                    // Clear text controls.
-                    Language = string.Empty;
-                    Folder = string.Empty;
-                }));
-            }
+            logger.Log("Adding new language.", Category.Debug, Priority.Medium);
+            ILingva newLang = dataProvider.CreateLanguage(Language, Folder);
+            Languages.Add(new LingvaViewModel(newLang));
+            // Clear text controls.
+            Language = string.Empty;
+            Folder = string.Empty;
         }
-        public ICommand RemoveLanguage
+        private void _RemoveLanguage()
         {
-            get
+            if (SelectedLanguage != null)
             {
-                return removeLanguage ??
-                (removeLanguage = new DelegateCommand(() =>
-                {
-                    if (SelectedLanguage != null)
-                    {
-                        logger.Log(string.Format("Removing language: {0}.", SelectedLanguage.Language),
-                            Category.Debug, Priority.Medium);
-                        ILingva lang = SelectedLanguage.Lingva;
-                        dataProvider.RemoveLanguage(lang);
-                        Languages.Remove(SelectedLanguage);
-                    }
-                }));
+                logger.Log(string.Format("Removing language: {0}.", SelectedLanguage.Language),
+                    Category.Debug, Priority.Medium);
+                ILingva lang = SelectedLanguage.Lingva;
+                dataProvider.RemoveLanguage(lang);
+                Languages.Remove(SelectedLanguage);
             }
         }
     }
