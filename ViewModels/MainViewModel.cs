@@ -17,12 +17,6 @@ namespace ViewModels
         private IUIMainWindowService windowService;
         private IDataProvider dataProvider;
         private ILoggerFacade logger;
-        private ICommand manageLanguages;
-        private ICommand exitApp;
-        private ICommand showHelp;
-        private ICommand runProject;
-        private ICommand openFile;
-        private ICommand deleteFile;
         private LingvaViewModel currentLanguage; 
         private ProjectViewModel currentProject;
         private FileStatsViewModel currentFile;
@@ -115,6 +109,13 @@ namespace ViewModels
         {
             get => totalWords == 0 ? 0 : (double)totalUnknown / totalWords;
         }
+        // Commands
+        public ICommand ManageLanguages { get; }
+        public ICommand ExitApp { get; }
+        public ICommand ShowHelp { get; }
+        public ICommand RunProject { get; }
+        public ICommand OpenFile { get; }
+        public ICommand DeleteFile { get; }
 
         // ctor
         public MainViewModel(IUIMainWindowService windowService, IDataProvider dataProvider, ILoggerFacade logger)
@@ -128,6 +129,16 @@ namespace ViewModels
             Files = new ObservableCollection<FileStatsViewModel>();
             Words = new ObservableCollection<WordViewModel>();
             WordsInProject = new ObservableCollection<WordViewModel>();
+            // Commands
+            ManageLanguages = new DelegateCommand(windowService.ManageLanguages);
+            ExitApp = new DelegateCommand(windowService.Shutdown);
+            ShowHelp = new DelegateCommand(windowService.ShowHelp);
+            RunProject = new DelegateCommand(async () => await HandleAnalysis())
+                .ObservesProperty(() => Files)
+                .ObservesProperty(() => ReadyToRun)
+                .ObservesCanExecute(() => CanRunAnalysis);
+            OpenFile = new DelegateCommand<object>(_OpenFile);
+            DeleteFile = new DelegateCommand<object>(_DeleteFile);
             OnLoad();
             logger.Log("MainView has started.", Category.Debug, Priority.Medium);
         }
@@ -302,97 +313,36 @@ namespace ViewModels
                 item.Highlighted = true;
             }
         }
-        // Commands
-        public ICommand ManageLanguages
+        private void _OpenFile(object parameter)
         {
-            get
+            if (parameter is string filePath)
             {
-                return manageLanguages ??
-                (manageLanguages = new DelegateCommand(() =>
+                if (!windowService.OpenFile(filePath))
                 {
-                    windowService.ManageLanguages();
-                }));
+                    windowService.ShowMessage(string.Format("Can't open {0}.", filePath));
+                }
             }
         }
-        public ICommand ExitApp
+        private void _DeleteFile(object parameter)
         {
-            get
+            string path = parameter as string;
+            if (path == null) return;
+            if (!windowService.Confirm(string.Format("Do you want to delete\n {0} ?", path))) return;
+
+            if (dataProvider.DeleteFile(path, out IFile fs))
             {
-                return exitApp ??
-                (exitApp = new DelegateCommand(() =>
+                if (fs is IFileStats ifs)
                 {
-                    windowService.Shutdown();
-                }));
-            }
-        }
-        public ICommand ShowHelp
-        {
-            get
-            {
-                return showHelp ??
-                (showHelp = new DelegateCommand(() =>
+                    Files.Remove(new FileStatsViewModel(ifs));
+                }
+                else if (fs is IDict ids)
                 {
-                    windowService.ShowHelp();
-                }));
+                    Dictionaries.Remove(new DictViewModel(ids));
+                }
             }
-        }
-        public ICommand RunProject
-        {
-            get
+            else
             {
-                return runProject ??
-                (runProject = new DelegateCommand(async () =>
-                    await HandleAnalysis())
-                    .ObservesProperty(() => Files)
-                    .ObservesProperty(() => ReadyToRun)
-                    .ObservesCanExecute(() => CanRunAnalysis)
-                );
-            }
-        }
-        public ICommand OpenFile
-        {
-            get
-            {
-                return openFile ??
-                (openFile = new DelegateCommand<object>((object parameter) =>
-                {
-                    if (parameter is string filePath)
-                    {
-                        if (!windowService.OpenFile(filePath))
-                        {
-                            windowService.ShowMessage(string.Format("Can't open {0}.", filePath));
-                        }
-                    }
-                }));
-            }
-        }
-        public ICommand DeleteFile
-        {
-            get
-            {
-                return deleteFile ??
-                (deleteFile = new DelegateCommand<object>((object parameter) =>
-                {
-                    string path = parameter as string;
-                    if (path == null) return;
-                    if (!windowService.Confirm(string.Format("Do you want to delete\n {0} ?", path))) return;
-                    
-                    if (dataProvider.DeleteFile(path, out IFile fs))
-                    {
-                        if (fs is IFileStats ifs)
-                        {
-                            Files.Remove(new FileStatsViewModel(ifs));
-                        }
-                        else if (fs is IDict ids)
-                        {
-                            Dictionaries.Remove(new DictViewModel(ids));
-                        }
-                    }
-                    else
-                    {
-                        windowService.ShowMessage(string.Format("Can't delete {0}.", path));
-                    }
-                }));
+                windowService.ShowMessage(string.Format("Can't delete {0}.", path));
             }
         }
     }

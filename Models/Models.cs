@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using Models.Interfaces;
 
 namespace Models
@@ -177,6 +178,7 @@ namespace Models
         public void Analyze(IProject project, System.IProgress<(double Progress, IFileStats FileStats)> progress)
         {
             progress.Report((0, null));
+            Thread.Sleep(5_000);
             progress.Report((10.54, new FileStats {
                 FileName = "test.txt",
                 FilePath = "test.txt",
@@ -184,6 +186,7 @@ namespace Models
                 Known = 900,
                 Maybe = 50,
                 Unknown = 5000 }));
+            Thread.Sleep(5_000);
         }
 
         public ILingva CreateLanguage(string name, string folder)
