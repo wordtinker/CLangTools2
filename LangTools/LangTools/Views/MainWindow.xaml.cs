@@ -62,8 +62,7 @@ namespace LangTools
             if (sender is DataGridRow item && item.DataContext is WordViewModel wordVM)
             {
                 // Let view model add the word into dictionary.
-                // TODO Later
-                //vm.AddWordToDictionary(wordVM);
+                vm.AddWordToDictionary(wordVM);
             }
         }
         /// <summary>

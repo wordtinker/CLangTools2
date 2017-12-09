@@ -71,5 +71,6 @@ namespace Models.Interfaces
         /// If text file was deleted out file is IFileStats, if dictionary
         /// was deleted out file is IDict. </returns>
         bool DeleteFile(string path, out IFile file);
+        void AddWordToDictionary(string word);
     }
 }

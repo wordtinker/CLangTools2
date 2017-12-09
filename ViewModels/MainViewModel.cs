@@ -313,6 +313,14 @@ namespace ViewModels
                 item.Highlighted = true;
             }
         }
+        /// <summary>
+        /// Adds one word into ditionary file.
+        /// </summary>
+        /// <param name="word"></param>
+        public void AddWordToDictionary(WordViewModel word)
+        {
+            dataProvider.AddWordToDictionary(word.Word);
+        }
         private void _OpenFile(object parameter)
         {
             if (parameter is string filePath)

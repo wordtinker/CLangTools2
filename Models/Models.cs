@@ -167,7 +167,7 @@ namespace Models
             yield return new FileStats
             {
                 FileName = "test.txt",
-                FilePath = "test.txt",
+                FilePath = @"C:\Users\Alex\Desktop\test\English\test.txt",
                 Size = 1000,
                 Known = 900,
                 Maybe = 50,
@@ -211,6 +211,11 @@ namespace Models
                 file = new FileStats { FilePath = path };
             }
             return true;
+        }
+
+        public void AddWordToDictionary(string word)
+        {
+            // Do nothing
         }
     }
 }
