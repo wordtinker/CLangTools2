@@ -1,5 +1,5 @@
-﻿using Prism.Mvvm;
-using Models.Interfaces;
+﻿using Models.Interfaces;
+using Prism.Mvvm;
 
 namespace ViewModels
 {

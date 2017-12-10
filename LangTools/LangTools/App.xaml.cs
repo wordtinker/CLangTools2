@@ -1,11 +1,10 @@
-﻿using Prism.Logging;
-using System.Windows;
-using ViewModels.Interfaces;
-using ViewModels;
+﻿using Models;
 using Models.Interfaces;
-using Models;
+using Prism.Logging;
 using System;
-// TODO fix usings order across all projects
+using System.Windows;
+using ViewModels;
+using ViewModels.Interfaces;
 
 namespace LangTools
 {

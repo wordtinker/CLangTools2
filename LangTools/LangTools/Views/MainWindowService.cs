@@ -1,8 +1,8 @@
-﻿using System.Windows;
-using ViewModels.Interfaces;
-using ViewModels;
-using Models;
+﻿using Models;
 using System;
+using System.Windows;
+using ViewModels;
+using ViewModels.Interfaces;
 
 namespace LangTools
 {

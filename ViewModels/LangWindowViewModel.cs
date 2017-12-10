@@ -1,13 +1,13 @@
-﻿using Prism.Logging;
+﻿using Models.Interfaces;
+using Prism.Commands;
+using Prism.Logging;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using Models.Interfaces;
-using ViewModels.Interfaces;
 using System.Windows.Input;
-using Prism.Commands;
+using ViewModels.Interfaces;
 
 namespace ViewModels
 {

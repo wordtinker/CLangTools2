@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Models.Interfaces;
+using System.Collections.Generic;
 using System.Threading;
-using Models.Interfaces;
 
 namespace Models
 {
