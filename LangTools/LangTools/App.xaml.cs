@@ -2,6 +2,7 @@
 using Models.Interfaces;
 using Prism.Logging;
 using System;
+using System.IO;
 using System.Windows;
 using ViewModels;
 using ViewModels.Interfaces;
@@ -13,8 +14,7 @@ namespace LangTools
     /// </summary>
     public partial class App : Application
     {
-        // TODO non empty logger
-        public static ILoggerFacade Logger { get; private set; } = new EmptyLogger();
+        public static ILoggerFacade Logger { get; private set; }
         /// <summary>
         /// Prepares environmental settings for app and starts.
         /// </summary>
@@ -23,7 +23,7 @@ namespace LangTools
         private void ApplicationStartup(object sender, StartupEventArgs e)
         {
             // Get app name from config file
-            string appName = Tools.ReadSetting("appName");
+            string appName = Tools.Settings.Read("appName");
             if (string.IsNullOrWhiteSpace(appName))
             {
                 MessageBox.Show("Error reading app settings.\nLangTools can't start.");
@@ -42,19 +42,22 @@ namespace LangTools
                 return;
             }
 
-            // TODO STUB
-            // TODO Properties? another way?
-            //appDir = IOTools.CombinePath(appDir, appName);
-            //// Save application directory path for later
-            //Current.Properties["appDir"] = appDir;
-
-            //// Create directory if not exist
-            //if (!IOTools.CreateDirectory(appDir))
-            //{
-            //    MessageBox.Show(string.Format("Something bad happened in {0} directory.\nLangTools can't start.", appDir));
-            //    return;
-            //}
-
+            // Create app directory path
+            appDir = Path.Combine(appDir, appName);
+            Logger = new SimpleLogger(appDir);
+            // Save application directory path for later
+            Current.Properties["appDir"] = appDir;
+            // Create directory if not exist
+            try
+            {
+                Directory.CreateDirectory(appDir);
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(string.Format("LangTools can't start.\n{0}", err.Message));
+                return;
+            }
+            // TODO
             //// Ensure we have data storage.
             //if (!ModelBoot.IsReadyToStart(appDir))
             //{

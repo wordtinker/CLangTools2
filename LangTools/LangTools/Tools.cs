@@ -1,10 +1,10 @@
 ﻿using System.Configuration;
 
-namespace LangTools
+namespace LangTools.Tools
 {
-    public static class Tools
+    public static class Settings
     {
-        public static string ReadSetting(string key)
+        public static string Read(string key)
         {
             try
             {

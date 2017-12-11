@@ -60,6 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Logger.cs" />
     <Compile Include="Views\LangManager.xaml.cs">
       <DependentUpon>LangManager.xaml</DependentUpon>
     </Compile>
