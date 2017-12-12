@@ -44,14 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DictViewModel.cs" />
-    <Compile Include="FileStatsViewModel.cs" />
-    <Compile Include="LangWindowViewModel.cs" />
-    <Compile Include="LingvaViewModel.cs" />
-    <Compile Include="MainViewModel.cs" />
-    <Compile Include="ProjectViewModel.cs" />
+    <Compile Include="Elements\DictViewModel.cs" />
+    <Compile Include="Elements\FileStatsViewModel.cs" />
+    <Compile Include="Window\LangWindowViewModel.cs" />
+    <Compile Include="Elements\LingvaViewModel.cs" />
+    <Compile Include="Window\MainViewModel.cs" />
+    <Compile Include="Elements\ProjectViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WordViewModel.cs" />
+    <Compile Include="Elements\WordViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Models.Interfaces\Models.Interfaces.csproj">
