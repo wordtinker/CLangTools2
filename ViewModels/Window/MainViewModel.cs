@@ -21,7 +21,7 @@ namespace ViewModels
         private ProjectViewModel currentProject;
         private FileStatsViewModel currentFile;
         private bool readyToRun = true; // defines if the user can switch project
-        private string log;
+        private string status;
         private int progressValue;
         private int totalWords; // total words in the project files
         private int totalUnknown; // unknown words in the project files
@@ -84,10 +84,10 @@ namespace ViewModels
         {
             get => Files.Count > 0 && ReadyToRun;
         }
-        public string Log
+        public string Status
         {
-            get => log;
-            set => SetProperty(ref log, value);
+            get => status;
+            set => SetProperty(ref status, value);
         }
         public int ProgressValue
         {
@@ -172,13 +172,13 @@ namespace ViewModels
         /// </summary>
         private void ProjectCleanUp()
         {
-            logger.Log("Project is about to change.", Category.Debug, Priority.Medium);
+            logger.Log("Cleaning up stage for a new project.", Category.Debug, Priority.Medium);
             // Clear dictionaries for previous project
             Dictionaries.Clear();
             // Clear FileStats
             Files.Clear();
             // Clear log and list of unknown words
-            Log = "";
+            Status = "";
             WordsInProject.Clear();
             Words.Clear();
         }
@@ -274,7 +274,7 @@ namespace ViewModels
                         if (foundFile != null)
                         {
                             foundFile.Update(p.FileStats);
-                            Log = string.Format("{0} is ready!", foundFile.FileName);
+                            Status = string.Format("{0} is ready!", foundFile.FileName);
                         }
                     }
                 }
@@ -284,7 +284,7 @@ namespace ViewModels
             int newMaybeQty = Files.Sum(x => x.Maybe.GetValueOrDefault());
             // Update the visual progress.
             ProgressValue = 100;
-            Log = string.Format(
+            Status = string.Format(
                 "Analysis is finished. Known: {0:+#;-#;0}, Maybe {1:+#;-#;0}", // Force sign, no sign for zero
                 newKnownQty - oldKnownQty, newMaybeQty - oldMaybeQty);
             logger.Log("Project analysis is ready.", Category.Debug, Priority.Medium);

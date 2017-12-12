@@ -66,7 +66,6 @@ namespace LangTools
             //    return;
             //}
 
-            Logger.Log("----The new session has started.----", Category.Debug, Priority.Medium);
             // Start the main window
             MainWindow = new MainWindow
             {
