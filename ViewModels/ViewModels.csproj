@@ -58,6 +58,10 @@
       <Project>{9f81230e-9b94-432d-b152-df94679a369b}</Project>
       <Name>Models.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Shared\Shared.csproj">
+      <Project>{53b88932-2640-4cf0-9049-40663f53aa97}</Project>
+      <Name>Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ViewModels.Interfaces\ViewModels.Interfaces.csproj">
       <Project>{cd2a2dca-a4f3-4d1a-acb2-32e618f17cc1}</Project>
       <Name>ViewModels.Interfaces</Name>

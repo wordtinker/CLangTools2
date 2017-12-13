@@ -1,5 +1,6 @@
 ﻿using Models.Interfaces;
 using Prism.Mvvm;
+using Shared.Tools;
 
 namespace ViewModels
 {
@@ -19,9 +20,9 @@ namespace ViewModels
         public int? Known { get; private set; }
         public int? Unknown { get; private set; }
         public int? Maybe { get; private set; }
-        public double? KnownPercent { get => ConvertToPercent(Known, Size); }
-        public double? MaybePercent { get => ConvertToPercent(Maybe, Size); }
-        public double? UnknownPercent { get => ConvertToPercent(Unknown, Size); }
+        public double? KnownPercent { get => Math.TakePercent(Known, Size); }
+        public double? MaybePercent { get => Math.TakePercent(Maybe, Size); }
+        public double? UnknownPercent { get => Math.TakePercent(Unknown, Size); }
         public bool Highlighted
         {
             get => highlighted;
@@ -41,16 +42,6 @@ namespace ViewModels
             Maybe = fileStats.Maybe;
             // Notify that every Property changed
             RaisePropertyChanged(string.Empty);
-        }
-        // TODO refactor to Shared.Tools.Math
-        private double? ConvertToPercent(int? dividend, int? divisor)
-        {
-            if (divisor == null || divisor == 0 || dividend == null)
-            {
-                return null;
-            }
-
-            return (double)dividend / divisor;
         }
         // Equals implementation
         // for .Intersect and deletion from Collections

@@ -7,6 +7,18 @@ namespace Shared
 {
     namespace Tools
     {
+        public class Math
+        {
+            public static double? TakePercent(int? dividend, int? divisor)
+            {
+                if (divisor == null || divisor == 0 || dividend == null)
+                {
+                    return null;
+                }
+
+                return (double)dividend / divisor;
+            }
+        } 
         public class IO
         {
             /// <summary>
@@ -82,6 +94,22 @@ namespace Shared
                 catch (Exception)
                 {
                     newName = null;
+                    return false;
+                }
+            }
+            /// <summary>
+            /// Deletes the file.
+            /// </summary>
+            /// <param name="fileName"></param>
+            public static bool DeleteFile(string fileName)
+            {
+                try
+                {
+                    File.Delete(fileName);
+                    return true;
+                }
+                catch (Exception)
+                {
                     return false;
                 }
             }

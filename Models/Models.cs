@@ -282,18 +282,21 @@ namespace Models
 
         public bool DeleteFile(string path, out IFile file)
         {
-            // TODO !!!
-            // delete dct
-            // delete txt+html
-            // delete html only
-            // Do deletion based on path.ext
-            if (path.EndsWith(".dct"))
+            file = null;
+            if (!IO.DeleteFile(path)) return false;
+
+            if (path.EndsWith(Config.DictExtension))
             {
                 file = new Dict { FilePath = path };
             }
-            else
+            else if (path.EndsWith(Config.FileExtension))
             {
                 file = new FileStats { FilePath = path };
+                // Delete associated output file
+                if (IO.ChangeExtension(path, Config.OutExtension, out string outPath))
+                {
+                    DeleteFile(outPath, out _);
+                }
             }
             return true;
         }
