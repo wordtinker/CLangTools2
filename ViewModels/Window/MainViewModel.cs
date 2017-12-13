@@ -227,7 +227,7 @@ namespace ViewModels
         /// </summary>
         private void LoadWordsForProject()
         {
-            foreach ((string word, int quantity) in dataProvider.GetUnknownWords())
+            foreach ((string word, int quantity) in dataProvider.GetUnknownWords(CurrentProject.Project))
             {
                 WordsInProject.Add(new WordViewModel { Word = word, Quantity = quantity });
             }

@@ -258,10 +258,9 @@ namespace Models
                 yield return item;
             }
         }
-        public IEnumerable<(string, int)> GetUnknownWords()
+        public IEnumerable<(string, int)> GetUnknownWords(IProject project)
         {
-            // TODO !!!
-            return storage.GetUnknownWords("stub", "stub");
+            return storage.GetUnknownWords(project.Parent.Language, project.Name);
         }
         public IEnumerable<(string, int)> GetUnknownWords(IFileStats fileStats)
         {

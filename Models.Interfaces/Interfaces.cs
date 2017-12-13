@@ -58,7 +58,7 @@ namespace Models.Interfaces
         IEnumerable<IFileStats> GetProjectFiles(IProject project);
         IEnumerable<IFileStats> GetFilesWithWord(string word);
         IEnumerable<(string, int)> GetUnknownWords(IFileStats fileStats);
-        IEnumerable<(string, int)> GetUnknownWords();
+        IEnumerable<(string, int)> GetUnknownWords(IProject project);
         void Analyze(IProject project, IProgress<(double Progress, IFileStats FileStats)> progress);
         ILingva CreateLanguage(string name, string folder);
         void RemoveLanguage(ILingva lingva);
