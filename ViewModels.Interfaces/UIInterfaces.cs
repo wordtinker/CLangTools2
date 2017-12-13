@@ -9,10 +9,6 @@ namespace ViewModels.Interfaces
         //void BeginInvoke(Action method);
         //string CommonDictionaryName { get; }
         //string AppDir { get; }
-        //string AppName { get; }
-        //string CorpusDir { get; }
-        //string DicDir { get; }
-        //string OutDir { get; }
         bool OpenFile(string path);
         void ShowMessage(string message);
         void ManageLanguages();

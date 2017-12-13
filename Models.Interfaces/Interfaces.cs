@@ -47,6 +47,8 @@ namespace Models.Interfaces
     public interface IProject
     {
         string Name { get; set; }
+        string Folder { get; set; }
+        ILingva Parent { get; set; }
     }
     public interface IDataProvider
     {

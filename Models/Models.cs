@@ -1,11 +1,28 @@
 ﻿using Models.Interfaces;
+using Shared.Tools;
+using Storage;
+using Storage.Interfaces;
+using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 
 namespace Models
 {
+    public static class Config
+    {
+        private static string commonDictionaryName = "Common.txt";
+        public static string CommonDictionaryName
+        {
+            get => commonDictionaryName;
+            set => commonDictionaryName = string.IsNullOrWhiteSpace(value) ? commonDictionaryName : value;
+        }
+        public static readonly string DictExtension = ".dct";
+        public static readonly string FileExtension = ".txt";
+        public static readonly string OutExtension = ".html";
+    }
     public static class ModelFactory
     {
+        private static IStorage storage = new StubStorage();
         private static IDataProvider dataProvider;
         private static IValidate validator;
 
@@ -14,7 +31,7 @@ namespace Models
             get
             {
                 return dataProvider ??
-                    (dataProvider = new StubModel());
+                    (dataProvider = new Model(storage));
             }
         }
         public static IValidate Validtor
@@ -22,29 +39,32 @@ namespace Models
             get
             {
                 return validator ??
-                    (validator = new LingvaValidator());
+                    (validator = new LingvaValidator(storage));
             }
         }
     }
 
     public class LingvaValidator : IValidate
     {
+        private IStorage storage;
+        internal LingvaValidator(IStorage storage)
+        {
+            this.storage = storage;
+        }
         public ValidationError ValidateLanguageName(string langName)
         {
             if (langName == null) return ValidationError.LANGNAMEEMPTY;
             string lang = langName.Trim();
             if (lang.Length == 0) return ValidationError.LANGNAMEEMPTY;
             if (lang.Length != langName.Length) return ValidationError.LANGWITHSPACES;
-            // TODO Later
-            //if (dataProvider.LanguageExists(lang)) return ValidationError.LANGTAKEN;
+            if (storage.LanguageExists(lang)) return ValidationError.LANGTAKEN;
             return ValidationError.NONE;
         }
         public ValidationError ValidateLanguageFolder(string langFolder)
         {
             if (langFolder == null) return ValidationError.FOLDERNAMEEMPTY;
             if (langFolder.Length == 0) return ValidationError.FOLDERNAMEEMPTY;
-            // TODO Later
-            //if (dataProvider.FolderExists(langFolder)) return ValidationError.FOLDERTAKEN;
+            if (storage.FolderExists(langFolder)) return ValidationError.FOLDERTAKEN;
             return ValidationError.NONE;
         }
     }
@@ -104,103 +124,169 @@ namespace Models
     public class Project : IProject
     {
         public string Name { get; set; }
+        public string Folder { get; set; }
+        public ILingva Parent { get; set; }
     }
 
-    public class StubModel : IDataProvider
-    {
+    public class Model : IDataProvider
+    {   // Members
+        private IStorage storage;
+        // ctor
+        internal Model(IStorage storage)
+        {
+            this.storage = storage;
+        }
+        // Methods
         public IEnumerable<ILingva> GetLanguages()
         {
-            yield return new Lingva { Language = "English", Folder = "/test" };
-            yield return new Lingva { Language = "Hebrew", Folder = "/test" };
+            foreach (var (name, folder) in storage.GetLanguages())
+            {
+                yield return new Lingva { Language = name, Folder = folder };
+            }
         }
+        public ILingva CreateLanguage(string name, string folder)
+        {
+            storage.AddLanguage(name, folder);
+            return new Lingva { Language = name, Folder = folder };
+        }
+        public void RemoveLanguage(ILingva lingva)
+        {
+            storage.RemoveLanguage(lingva.Language);
+        }
+
         public IEnumerable<IProject> GetProjects(ILingva lingva)
         {
-            yield return new Project { Name = "books" + lingva.Language };
-            yield return new Project { Name = "other" + lingva.Language };
+            // Take list of folders from lang directory
+            if (IO.ListDirectories(lingva.Folder, out List<string> projectsInDir))
+            {
+                // Take list of projects from storage
+                // Get known projects from DB
+                var projectsInDB = storage.GetProjects(lingva.Language);
+                // Find projects left only in DB
+                foreach (string leftover in projectsInDB.Except(projectsInDir))
+                {
+                    // Remove leftover projects
+                    storage.RemoveProject(lingva.Language, leftover);
+                }
+                // Return used projects
+                foreach (string name in projectsInDir)
+                {
+                    if (IO.CombinePath(out string path, lingva.Folder, name))
+                    {
+                        yield return new Project { Name = name, Folder = path, Parent = lingva};
+                    }
+                }
+            }
+        }
+        private IEnumerable<IDict> GetDictionaries(string folder, DictType type)
+        {
+            string filter = $"*{Config.DictExtension}";
+            if (!IO.ListFiles(folder, out List<string> dictionaries, filter: filter)) yield break;
+            
+            foreach (string fileName in dictionaries)
+            {
+                if (IO.CombinePath(out string path ,folder, fileName))
+                {
+                    yield return new Dict
+                    {
+                        DictType = type,
+                        FileName = fileName,
+                        FilePath = path
+                    };
+                }
+            }
         }
         public IEnumerable<IDict> GetProjectDictionaries(IProject project)
         {
-            yield return new Dict
-            {
-                DictType = DictType.General,
-                FileName = "10000.txt",
-                FilePath = @"C:\Users\Alex\Desktop\test\English\test.dct"
-            };
-            yield return new Dict { DictType = DictType.Project, FileName = project.Name, FilePath = "/test" };
+            // Get custom project dictionaries
+            return GetDictionaries(project.Folder, DictType.Project)
+            // Get general project dictionaries.
+                .Concat(GetDictionaries(project.Parent.Folder, DictType.General));
         }
         public IEnumerable<IFileStats> GetProjectFiles(IProject project)
         {
-            yield return new FileStats
+            // Get file names from project dir
+            string filter = $"*{Config.FileExtension}";
+            if (!IO.ListFiles(project.Folder, out List<string> fileNames, filter: filter)) yield break;
+            // Create FileStats object for every file name
+            List<FileStats> inDir = new List<FileStats>();
+            foreach (string fName in fileNames)
             {
-                FileName = "test.txt",
-                FilePath = @"C:\Users\Alex\Desktop\test\English\test.txt",
-                OutPath = @"C:\Users\Alex\Desktop\test\English\test.html",
-                Size = 1000,
-                Known = 900,
-                Maybe = 50,
-                Unknown = 50
-            };
-            yield return new FileStats
+                if (IO.CombinePath(out string path, project.Folder, fName))
+                {
+                    inDir.Add(new FileStats
+                    {
+                        FileName = fName,
+                        FilePath = path
+                    });
+                }
+            }
+            // Get list of objects from DB
+            // Objects from DB shoul have output page already
+            List<FileStats> inDB = new List<FileStats>();
+            foreach (var (name, path, size, known, maybe, unknown) in
+                storage.GetFilesStats(project.Parent.Language, project.Name))
             {
-                FileName = "test2.txt",
-                FilePath = "test2.txt",
-                Size = 15847,
-                Known = 900,
-                Maybe = 50,
-                Unknown = 50
-            };
-        }
-
-        public IEnumerable<(string, int)> GetUnknownWords(IFileStats fileStats)
-        {
-            yield return ("word", 54);
-            yield return ("word2", 2);
+                if (IO.ChangeExtension(path, Config.OutExtension, out string outPath))
+                {
+                    inDB.Add(new FileStats
+                    {
+                        FileName = name,
+                        FilePath = path,
+                        Size = size,
+                        Known = known,
+                        Maybe = maybe,
+                        Unknown = unknown,
+                        OutPath = outPath
+                    });
+                }
+            }
+            // Remove leftover stats from DB.
+            foreach (FileStats item in inDB.Except(inDir))
+            {
+                storage.RemoveFileStats(item.FilePath);
+            }
+            // NB: inDB.Intersect will return elements from inDB.
+            // Need this order since they have more information.
+            foreach (FileStats item in inDB.Intersect(inDir))
+            {
+                yield return item;
+            }
+            // Add files that we have in dir but no stats in DB
+            foreach (FileStats item in inDir.Except(inDB))
+            {
+                yield return item;
+            }
         }
         public IEnumerable<(string, int)> GetUnknownWords()
         {
-            yield return ("word", 154);
-            yield return ("word2", 12);
+            // TODO !!!
+            return storage.GetUnknownWords("stub", "stub");
+        }
+        public IEnumerable<(string, int)> GetUnknownWords(IFileStats fileStats)
+        {
+            return storage.GetUnknownWords(fileStats.FilePath);
         }
 
         public IEnumerable<IFileStats> GetFilesWithWord(string word)
         {
-            yield return new FileStats
+            foreach (string filePath in storage.GetFilesWithWord(word))
             {
-                FileName = "test.txt",
-                FilePath = @"C:\Users\Alex\Desktop\test\English\test.txt",
-                Size = 1000,
-                Known = 900,
-                Maybe = 50,
-                Unknown = 50
-            };
+                yield return new FileStats { FilePath = filePath };
+            }
         }
 
         public void Analyze(IProject project, System.IProgress<(double Progress, IFileStats FileStats)> progress)
         {
-            progress.Report((0, null));
-            Thread.Sleep(5_000);
-            progress.Report((10.54, new FileStats {
-                FileName = "test.txt",
-                FilePath = "test.txt",
-                Size = 9999,
-                Known = 900,
-                Maybe = 50,
-                Unknown = 5000 }));
-            Thread.Sleep(5_000);
-        }
-
-        public ILingva CreateLanguage(string name, string folder)
-        {
-            return new Lingva { Language = name, Folder = folder };
-        }
-
-        public void RemoveLanguage(ILingva lingva)
-        {
-            // DO nothing
+            // TODO !!!
         }
 
         public bool DeleteFile(string path, out IFile file)
         {
+            // TODO !!!
+            // delete dct
+            // delete txt+html
+            // delete html only
             // Do deletion based on path.ext
             if (path.EndsWith(".dct"))
             {
@@ -212,10 +298,16 @@ namespace Models
             }
             return true;
         }
-
+        /// <summary>
+        /// Appends the word to common dictionary.
+        /// </summary>
+        /// <param name="word"></param>
         public void AddWordToDictionary(string word)
         {
-            // Do nothing
+            // TODO !!!
+            //string wordToAppend = $"{word}{Environment.NewLine}";
+            //string path = IO.CombinePath();
+            //IO.AppendToFile(Config.CommonDictionaryName, wordToAppend);
         }
     }
 }
