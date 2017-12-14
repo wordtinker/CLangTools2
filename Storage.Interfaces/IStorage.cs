@@ -11,7 +11,7 @@ namespace Storage.Interfaces
         IEnumerable<string> GetProjects(string language);
         void RemoveProject(string language, string project);
         IEnumerable<(string name, string path, int size, int known,
-            int maybe, int unknown)> GetFilesStats(string language, string project);
+            int maybe, int unknown)> GetFileStats(string language, string project);
         void RemoveFileStats(string filePath);
         //void UpdateStats(IFileStats stats);
         //void CommitStats();

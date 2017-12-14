@@ -178,6 +178,24 @@ namespace Models
                 }
             }
         }
+        private IEnumerable<IFileStats> GetFiles(string folder)
+        {
+            // Get file names from project dir
+            string filter = $"*{Config.FileExtension}";
+            if (!IO.ListFiles(folder, out List<string> fileNames, filter: filter)) yield break;
+
+            foreach (string fName in fileNames)
+            {
+                if (IO.CombinePath(out string path, folder, fName))
+                {
+                    yield return new FileStats
+                    {
+                        FileName = fName,
+                        FilePath = path
+                    };
+                }
+            }
+        }
         private IEnumerable<IDict> GetDictionaries(string folder, DictType type)
         {
             string filter = $"*{Config.DictExtension}";
@@ -205,27 +223,14 @@ namespace Models
         }
         public IEnumerable<IFileStats> GetProjectFiles(IProject project)
         {
-            // Get file names from project dir
-            string filter = $"*{Config.FileExtension}";
-            if (!IO.ListFiles(project.Folder, out List<string> fileNames, filter: filter)) yield break;
-            // Create FileStats object for every file name
-            List<FileStats> inDir = new List<FileStats>();
-            foreach (string fName in fileNames)
-            {
-                if (IO.CombinePath(out string path, project.Folder, fName))
-                {
-                    inDir.Add(new FileStats
-                    {
-                        FileName = fName,
-                        FilePath = path
-                    });
-                }
-            }
+            // Get list of filestats object in folder
+            List<IFileStats> inDir = GetFiles(project.Folder).ToList();
+            
             // Get list of objects from DB
             // Objects from DB shoul have output page already
-            List<FileStats> inDB = new List<FileStats>();
+            List<IFileStats> inDB = new List<IFileStats>();
             foreach (var (name, path, size, known, maybe, unknown) in
-                storage.GetFilesStats(project.Parent.Language, project.Name))
+                storage.GetFileStats(project.Parent.Language, project.Name))
             {
                 if (IO.ChangeExtension(path, Config.OutExtension, out string outPath))
                 {
@@ -242,18 +247,18 @@ namespace Models
                 }
             }
             // Remove leftover stats from DB.
-            foreach (FileStats item in inDB.Except(inDir))
+            foreach (IFileStats item in inDB.Except(inDir))
             {
                 storage.RemoveFileStats(item.FilePath);
             }
             // NB: inDB.Intersect will return elements from inDB.
             // Need this order since they have more information.
-            foreach (FileStats item in inDB.Intersect(inDir))
+            foreach (IFileStats item in inDB.Intersect(inDir))
             {
                 yield return item;
             }
             // Add files that we have in dir but no stats in DB
-            foreach (FileStats item in inDir.Except(inDB))
+            foreach (IFileStats item in inDir.Except(inDB))
             {
                 yield return item;
             }

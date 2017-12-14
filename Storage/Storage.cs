@@ -15,7 +15,7 @@ namespace Storage
             return false;
         }
 
-        public IEnumerable<(string name, string path, int size, int known, int maybe, int unknown)> GetFilesStats(string language, string project)
+        public IEnumerable<(string name, string path, int size, int known, int maybe, int unknown)> GetFileStats(string language, string project)
         {
             yield break;
         }
