@@ -20,7 +20,7 @@ namespace ViewModels
         private LingvaViewModel currentLanguage; 
         private ProjectViewModel currentProject;
         private FileStatsViewModel currentFile;
-        private bool readyToRun = true; // defines if the user can switch project and run analysis
+        private bool readyToRun; // defines if the user can switch project and run analysis
         private string status;
         private int progressValue;
         private int totalWords; // total words in the project files
