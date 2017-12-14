@@ -79,7 +79,7 @@
                 </StackPanel>
                 <Separator Grid.Column="1" />
                 <StatusBarItem Grid.Column="2">
-                    <TextBlock Text="{Binding Log}"/>
+                    <TextBlock Text="{Binding Status}"/>
                 </StatusBarItem>
                 <Separator Grid.Column="3" />
                 <StatusBarItem Grid.Column="4" Margin="2">
