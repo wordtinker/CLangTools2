@@ -98,6 +98,24 @@ namespace Shared
                 }
             }
             /// <summary>
+            /// Appends the string to the file.
+            /// </summary>
+            /// <param name="filePath"></param>
+            /// <param name="content"></param>
+            /// <returns></returns>
+            public static bool AppendToFile(string filePath, string content)
+            {
+                try
+                {
+                    File.AppendAllText(filePath, content);
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            /// <summary>
             /// Deletes the file.
             /// </summary>
             /// <param name="fileName"></param>

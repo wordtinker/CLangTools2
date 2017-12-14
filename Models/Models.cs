@@ -275,7 +275,7 @@ namespace Models
             }
         }
 
-        public void Analyze(IProject project, System.IProgress<(double Progress, IFileStats FileStats)> progress)
+        public void Analyze(IProject project, IProgress<(double Progress, IFileStats FileStats)> progress)
         {
             // TODO !!!
         }
@@ -304,12 +304,13 @@ namespace Models
         /// Appends the word to common dictionary.
         /// </summary>
         /// <param name="word"></param>
-        public void AddWordToDictionary(string word)
+        public void AddWordToDictionary(IProject project, string word)
         {
-            // TODO !!!
-            //string wordToAppend = $"{word}{Environment.NewLine}";
-            //string path = IO.CombinePath();
-            //IO.AppendToFile(Config.CommonDictionaryName, wordToAppend);
+            string wordToAppend = $"{word}{Environment.NewLine}";
+            if (IO.CombinePath(out string path, project.Folder, Config.CommonDictionaryName))
+            {
+                IO.AppendToFile(path, wordToAppend);
+            }
         }
     }
 }
