@@ -92,7 +92,23 @@ namespace Shared
                     content = File.ReadAllText(filePath, Encoding.UTF8);
                     return true;
                 }
-                catch (Exception e)
+                catch (Exception)
+                {
+                    content = null;
+                    return false;
+                }
+            }
+            /// <summary>
+            /// Provides the text contents of the file by line.
+            /// </summary>
+            public static bool ReadAllLines(string filePath, out string[] content)
+            {
+                try
+                {
+                    content = File.ReadAllLines(filePath, Encoding.UTF8);
+                    return true;
+                }
+                catch (Exception)
                 {
                     content = null;
                     return false;

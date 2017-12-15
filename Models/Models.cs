@@ -46,9 +46,10 @@ namespace Models
                     (validator = new LingvaValidator(Storage));
             }
         }
+        internal static ITreeBuilder TreeBuilder { get; } = new TreeBuilder();
         internal static ILexer Lexer
         {
-            get => new StubLexer();
+            get => new Lexer();
         }
         internal static IStorage Storage
         {
@@ -306,7 +307,7 @@ namespace Models
             var files = GetFiles(project.Folder);
             var dictionaries = GetProjectDictionaries(project);
             // Create object that handles analysis.
-            Analyzer worker = new Analyzer(project, dictionaries, ModelFactory.Lexer);
+            Analyzer worker = new Analyzer(project, dictionaries);
             progress.Report((30d, null));
             double percentValue = 30;
             double step = 70.0 / files.Count();
