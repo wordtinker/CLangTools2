@@ -258,7 +258,6 @@ namespace ViewModels
             // Get the old project stats
             int oldKnownQty = Files.Sum(x => x.Known.GetValueOrDefault());
             int oldMaybeQty = Files.Sum(x => x.Maybe.GetValueOrDefault());
-            ProgressValue = 0;
             logger.Log("Requesting Project analysis.", Category.Debug, Priority.Medium);
             // Start analysis
             await Task.Run(() => dataProvider.Analyze(
@@ -283,7 +282,6 @@ namespace ViewModels
             int newKnownQty = Files.Sum(x => x.Known.GetValueOrDefault());
             int newMaybeQty = Files.Sum(x => x.Maybe.GetValueOrDefault());
             // Update the visual progress.
-            ProgressValue = 100;
             Status = string.Format(
                 "Analysis is finished. Known: {0:+#;-#;0}, Maybe {1:+#;-#;0}", // Force sign, no sign for zero
                 newKnownQty - oldKnownQty, newMaybeQty - oldMaybeQty);

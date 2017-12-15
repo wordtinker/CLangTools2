@@ -13,11 +13,9 @@ namespace Storage.Interfaces
         IEnumerable<(string name, string path, int size, int known,
             int maybe, int unknown)> GetFileStats(string language, string project);
         void RemoveFileStats(string filePath);
-        //void UpdateStats(IFileStats stats);
-        //void CommitStats();
+        //void CommitStats(IFileStats stats);
         // TODO
-        //void UpdateWords(string filePath, IEnumerable<TokenStats> tokens);
-        //void CommitWords();
+        //void CommitWords(string filePath, IEnumerable<TokenStats> tokens);
         IEnumerable<(string, int)> GetUnknownWords(string filePath);
         IEnumerable<(string, int)> GetUnknownWords(string lang, string project);
         IEnumerable<string> GetFilesWithWord(string word);

@@ -16,12 +16,14 @@ namespace Models
             get => commonDictionaryName;
             set => commonDictionaryName = string.IsNullOrWhiteSpace(value) ? commonDictionaryName : value;
         }
+        public static string StyleDirectoryPath { get; set; } = null;
         public static readonly string DictExtension = ".dct";
         public static readonly string FileExtension = ".txt";
         public static readonly string OutExtension = ".html";
     }
     public static class ModelFactory
     {
+        // TODO
         private static IStorage storage = new StubStorage();
         private static IDataProvider dataProvider;
         private static IValidate validator;
@@ -34,13 +36,18 @@ namespace Models
                     (dataProvider = new Model(storage));
             }
         }
-        public static IValidate Validtor
+        public static IValidate Validator
         {
             get
             {
                 return validator ??
                     (validator = new LingvaValidator(storage));
             }
+        }
+        internal static ILexer Lexer
+        {
+            // TODO
+            get => null;
         }
     }
 
@@ -282,7 +289,25 @@ namespace Models
 
         public void Analyze(IProject project, IProgress<(double Progress, IFileStats FileStats)> progress)
         {
-            // TODO !!!
+            progress.Report((0d, null));
+            // Remove old stats and words for project from DB.
+            storage.RemoveProject(project.Parent.Language, project.Name);
+            // Get file names and dic names from project dir
+            var files = GetFiles(project.Folder);
+            var dictionaries = GetProjectDictionaries(project);
+            // Create object that handles analysis.
+            Analyzer worker = new Analyzer(project, dictionaries, ModelFactory.Lexer);
+            progress.Report((30d, null));
+            double percentValue = 30;
+            double step = 70.0 / files.Count();
+            // Analyze files and report progress
+            foreach (FileStats fileStats in files)
+            {
+                percentValue += step;
+                IFileStats newFileStats = worker.AnalyzeFile(fileStats);
+                progress.Report((percentValue, newFileStats));
+            }
+            progress.Report((100d, null));
         }
 
         public bool DeleteFile(string path, out IFile file)

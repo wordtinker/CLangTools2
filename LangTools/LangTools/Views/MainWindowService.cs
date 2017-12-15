@@ -32,7 +32,7 @@ namespace LangTools
         public void ManageLanguages()
         {
             LangWindowViewModel vm = new LangWindowViewModel(
-                (MainViewModel)mainWindow.DataContext, this, ModelFactory.Validtor,
+                (MainViewModel)mainWindow.DataContext, this, ModelFactory.Validator,
                 ModelFactory.Model, App.Logger);
             LangManager window = new LangManager
             {

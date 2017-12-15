@@ -73,6 +73,9 @@ namespace LangTools
             };
             // Inject dependencies
             IUIMainWindowService service = new MainWindowService(MainWindow);
+            // TODO
+            //Config.CommonDictionaryName = "";
+            //Config.StyleDirectoryPath = IO.CombinePath(Directory.GetCurrentDirectory(), "plugins");
             IDataProvider dataProvider = ModelFactory.Model;
             MainWindow.DataContext = new MainViewModel(service, dataProvider, Logger);
             MainWindow.Show();

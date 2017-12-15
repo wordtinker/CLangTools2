@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Shared
 {
@@ -75,6 +76,25 @@ namespace Shared
                 catch (Exception)
                 {
                     path = null;
+                    return false;
+                }
+            }
+            /// <summary>
+            /// Provides the text contents of the file.
+            /// </summary>
+            /// <param name="filePath"></param>
+            /// <param name="content"></param>
+            /// <returns></returns>
+            public static bool ReadAllText(string filePath, out string content)
+            {
+                try
+                {
+                    content = File.ReadAllText(filePath, Encoding.UTF8);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    content = null;
                     return false;
                 }
             }
