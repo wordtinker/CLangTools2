@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Core.Interfaces;
 using Models.Interfaces;
 using Shared.Tools;
@@ -42,7 +43,7 @@ namespace Models
             lexer.ExpandDictionary();
         }
 
-        internal IFileStats AnalyzeFile(IFileStats fileStats)
+        internal IFileStats AnalyzeFile(IProject project, IFileStats fileStats)
         {
             if (IO.ReadAllLines(fileStats.FilePath, out string[] content))
             {
@@ -50,25 +51,27 @@ namespace Models
                 var tree = ModelFactory.TreeBuilder.Build(fileStats.FileName, content);
                 // Get stats for every element of the tree
                 tree = lexer.AnalyzeText(tree);
-                // TODO !!!
+                fileStats.Size = tree.Size;
+                fileStats.Known = tree.Known;
+                fileStats.Maybe = tree.Maybe;
+                // TODO check this inside fileStats
+                fileStats.Unknown = fileStats.Size - fileStats.Known - fileStats.Maybe;
+                // TODO
                 // Produce new output page
                 //string outPath = printer.Print(docRoot);
                 //file.OutPath = outPath;
-                //    // Update stats in the DB
-                //    storage.UpdateStats(file);
-                //    // Commit changes to DB
-                //    storage.CommitStats();
-                //    // Add new list of unknown words into DB
-                //    var newWords = docRoot.Tokens
-                //                    .Where(t => t.Stats?.Know == Klass.UNKNOWN)
-                //                    .Select(t => t.Stats)
-                //                    .Distinct();
-
-                //    // commit prevents memory leak
-                //    storage.UpdateWords(file.FilePath, newWords);
-                //    storage.CommitWords();
+                // Update stats in the DB
+                ModelFactory.Storage.CommitStats(fileStats.FileName, fileStats.FilePath,
+                    project.Parent.Language, project.Name,
+                    fileStats.Size.GetValueOrDefault(), fileStats.Known.GetValueOrDefault(),
+                    fileStats.Maybe.GetValueOrDefault(), fileStats.Unknown.GetValueOrDefault());
+                // Add new list of unknown words into DB
+                var newWords = tree.Tokens
+                                .Where(t => t.Stats?.Know == Klass.UNKNOWN)
+                                .Select(t => t.Stats)
+                                .Distinct().Select(ts => (ts.LWord, ts.Count));
+                ModelFactory.Storage.CommitWords(fileStats.FilePath, newWords);
             }
-            // TODO
             return fileStats;
         }
     }

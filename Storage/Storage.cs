@@ -15,6 +15,16 @@ namespace Storage
             // do nothing
         }
 
+        public void CommitStats(string name, string path, string lang, string project, int size, int known, int maybe, int unknown)
+        {
+            //
+        }
+
+        public void CommitWords(string filePath, IEnumerable<(string word, int count)> tokens)
+        {
+            //
+        }
+
         public bool FolderExists(string folderName)
         {
             return false;

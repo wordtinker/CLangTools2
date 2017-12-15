@@ -315,7 +315,7 @@ namespace Models
             foreach (IFileStats fileStats in files)
             {
                 percentValue += step;
-                IFileStats newFileStats = worker.AnalyzeFile(fileStats);
+                IFileStats newFileStats = worker.AnalyzeFile(project, fileStats);
                 progress.Report((percentValue, newFileStats));
             }
             progress.Report((100d, null));
