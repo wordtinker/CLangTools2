@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Storage
 {
+    // TODO
     public class StubStorage : IStorage
     {
         public StubStorage(string directory)
