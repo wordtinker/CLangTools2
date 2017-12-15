@@ -1,4 +1,5 @@
-﻿using Models.Interfaces;
+﻿using Core.Interfaces;
+using Models.Interfaces;
 using Shared.Tools;
 using Storage;
 using Storage.Interfaces;
@@ -10,21 +11,21 @@ namespace Models
 {
     public static class Config
     {
-        private static string commonDictionaryName = "Common.txt";
+        private static string commonDictionaryName = "Common";
         public static string CommonDictionaryName
         {
             get => commonDictionaryName;
             set => commonDictionaryName = string.IsNullOrWhiteSpace(value) ? commonDictionaryName : value;
         }
         public static string StyleDirectoryPath { get; set; } = null;
+        public static string WorkingDirectory { get; set; } = null;
         public static readonly string DictExtension = ".dct";
         public static readonly string FileExtension = ".txt";
         public static readonly string OutExtension = ".html";
     }
     public static class ModelFactory
     {
-        // TODO
-        private static IStorage storage = new StubStorage();
+        private static IStorage storage;
         private static IDataProvider dataProvider;
         private static IValidate validator;
 
@@ -33,7 +34,7 @@ namespace Models
             get
             {
                 return dataProvider ??
-                    (dataProvider = new Model(storage));
+                    (dataProvider = new Model(Storage));
             }
         }
         public static IValidate Validator
@@ -41,13 +42,22 @@ namespace Models
             get
             {
                 return validator ??
-                    (validator = new LingvaValidator(storage));
+                    (validator = new LingvaValidator(Storage));
             }
         }
         internal static ILexer Lexer
         {
             // TODO
             get => null;
+        }
+        internal static IStorage Storage
+        {
+            get
+            {
+                if (Config.WorkingDirectory == null) throw new ArgumentNullException("WorkingDirectory", "Working directory is not set");
+                return storage ??
+                    (storage = new StubStorage(Config.WorkingDirectory));
+            }
         }
     }
 
@@ -337,7 +347,8 @@ namespace Models
         public void AddWordToDictionary(IProject project, string word)
         {
             string wordToAppend = $"{word}{Environment.NewLine}";
-            if (IO.CombinePath(out string path, project.Folder, Config.CommonDictionaryName))
+            if (IO.CombinePath(out string path, project.Folder, Config.CommonDictionaryName) &&
+                IO.ChangeExtension(path,Config.DictExtension, out path))
             {
                 IO.AppendToFile(path, wordToAppend);
             }

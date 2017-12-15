@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LangTools", "LangTools\LangTools.csproj", "{3BE701FA-5724-4A57-B54D-9FB3A169F209}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage", "..\Storage\Storage.csproj", "{F06CFC3F-3D1B-4C67-BBA5-011173B9B9CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "..\Shared\Shared.csproj", "{53B88932-2640-4CF0-9049-40663F53AA97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Interfaces", "..\Core.Interfaces\Core.Interfaces.csproj", "{CD1BA3A7-C267-4C48-B0F9-F58B7F7EF013}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{53B88932-2640-4CF0-9049-40663F53AA97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53B88932-2640-4CF0-9049-40663F53AA97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53B88932-2640-4CF0-9049-40663F53AA97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD1BA3A7-C267-4C48-B0F9-F58B7F7EF013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD1BA3A7-C267-4C48-B0F9-F58B7F7EF013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD1BA3A7-C267-4C48-B0F9-F58B7F7EF013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD1BA3A7-C267-4C48-B0F9-F58B7F7EF013}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

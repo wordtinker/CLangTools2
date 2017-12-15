@@ -5,6 +5,10 @@ namespace Storage
 {
     public class StubStorage : IStorage
     {
+        public StubStorage(string directory)
+        {
+
+        }
         public void AddLanguage(string name, string folder)
         {
             // do nothing

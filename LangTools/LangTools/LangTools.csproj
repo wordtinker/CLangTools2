@@ -125,6 +125,10 @@
       <Project>{b9a2d65c-d48a-45b2-90b5-d62898306489}</Project>
       <Name>Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Shared\Shared.csproj">
+      <Project>{53b88932-2640-4cf0-9049-40663f53aa97}</Project>
+      <Name>Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ViewModels.Interfaces\ViewModels.Interfaces.csproj">
       <Project>{cd2a2dca-a4f3-4d1a-acb2-32e618f17cc1}</Project>
       <Name>ViewModels.Interfaces</Name>

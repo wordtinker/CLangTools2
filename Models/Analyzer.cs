@@ -1,17 +1,10 @@
 ﻿using System.Collections.Generic;
+using Core.Interfaces;
 using Models.Interfaces;
 using Shared.Tools;
 
 namespace Models
 {
-    // TODO move
-    public interface ILexer
-    {
-        string Extension { get; }
-        void LoadPlugin(string content);
-        void LoadDictionary(string content);
-        void ExpandDictionary();
-    }
     class Analyzer
     {
         private IProject project;

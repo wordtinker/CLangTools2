@@ -1,6 +1,7 @@
 ﻿using Models;
 using Models.Interfaces;
 using Prism.Logging;
+using Shared.Tools;
 using System;
 using System.IO;
 using System.Windows;
@@ -29,27 +30,12 @@ namespace LangTools
                 MessageBox.Show("Error reading app settings.\nLangTools can't start.");
                 return;
             }
-
             // Get app directory
             string appDir;
             try
             {
                 appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            }
-            catch (PlatformNotSupportedException)
-            {
-                MessageBox.Show("Platform is not supported.\nLangTools can't start.");
-                return;
-            }
-
-            // Create app directory path
-            appDir = Path.Combine(appDir, appName);
-            Logger = new SimpleLogger(appDir);
-            // Save application directory path for later
-            Current.Properties["appDir"] = appDir;
-            // Create directory if not exist
-            try
-            {
+                appDir = Path.Combine(appDir, appName);
                 Directory.CreateDirectory(appDir);
             }
             catch (Exception err)
@@ -57,26 +43,22 @@ namespace LangTools
                 MessageBox.Show(string.Format("LangTools can't start.\n{0}", err.Message));
                 return;
             }
-            // TODO
-            //// Ensure we have data storage.
-            //if (!ModelBoot.IsReadyToStart(appDir))
-            //{
-            //    NB  return Storage.CreateFile(appDir);
-            //    MessageBox.Show(string.Format("Can't start the app."));
-            //    return;
-            //}
 
-            // Start the main window
+            // Configure and start model
+            IO.CombinePath(out string stylePath, Directory.GetCurrentDirectory(), "plugins");
+            Config.StyleDirectoryPath = stylePath;
+            Config.CommonDictionaryName = Tools.Settings.Read("commonDic");
+            Config.WorkingDirectory = appDir;
+            IDataProvider dataProvider = ModelFactory.Model;
+            // Create logger
+            Logger = new SimpleLogger(appDir);
+            // Start main window
             MainWindow = new MainWindow
             {
                 Title = appName
             };
-            // Inject dependencies
+            // Inject dependencies and properties
             IUIMainWindowService service = new MainWindowService(MainWindow);
-            // TODO
-            //Config.CommonDictionaryName = "";
-            //Config.StyleDirectoryPath = IO.CombinePath(Directory.GetCurrentDirectory(), "plugins");
-            IDataProvider dataProvider = ModelFactory.Model;
             MainWindow.DataContext = new MainViewModel(service, dataProvider, Logger);
             MainWindow.Show();
         }
