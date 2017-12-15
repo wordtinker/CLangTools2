@@ -42,7 +42,7 @@ namespace Models
             lexer.ExpandDictionary();
         }
 
-        internal IFileStats AnalyzeFile(FileStats fileStats)
+        internal IFileStats AnalyzeFile(IFileStats fileStats)
         {
             // TODO
             //if (docRoot != null)

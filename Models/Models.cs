@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core;
+using Core.Interfaces;
 using Models.Interfaces;
 using Shared.Tools;
 using Storage;
@@ -47,8 +48,7 @@ namespace Models
         }
         internal static ILexer Lexer
         {
-            // TODO
-            get => null;
+            get => new StubLexer();
         }
         internal static IStorage Storage
         {
@@ -311,7 +311,7 @@ namespace Models
             double percentValue = 30;
             double step = 70.0 / files.Count();
             // Analyze files and report progress
-            foreach (FileStats fileStats in files)
+            foreach (IFileStats fileStats in files)
             {
                 percentValue += step;
                 IFileStats newFileStats = worker.AnalyzeFile(fileStats);
