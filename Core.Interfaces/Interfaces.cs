@@ -26,8 +26,7 @@ namespace Core.Interfaces
         IEnumerable<IItem> Items { get; }
         int Known { get; }
         int Maybe { get; }
-        // TODO drop name
-        string Name { get; set; }
+        string Content { get; set; }
         int Size { get; }
         IEnumerable<IToken> Tokens { get; }
 
@@ -57,7 +56,7 @@ namespace Core.Interfaces
     public interface ITreeBuilder
     {
         IItem Compose(string[] content);
-        string Decompose(IItem root, Func<IItem, string> rootDecorator,
-            Func<IItem, string> paragraphDecorator, Func<IItem, string> wordDecorator);
+        string Decompose(IItem root,
+            Func<IItem, string> paragraphDecorator, Func<IToken, string> wordDecorator);
     }
 }

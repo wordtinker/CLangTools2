@@ -14,7 +14,7 @@ namespace Core
         /// <summary>
         /// Name of the node
         /// </summary>
-        public virtual string Name { get; set; }
+        public virtual string Content { get; set; }
         /// <summary>
         /// Number of word tokens in the node and subnodes.
         /// </summary>
@@ -80,6 +80,7 @@ namespace Core
     /// </summary>
     internal class Paragraph : Item
     {
+        public override string Content => string.Join(string.Empty, Items.Select(i => i.Content));
         public override IEnumerable<IToken> Tokens => this.items.OfType<Token>();
     }
     /// <summary>

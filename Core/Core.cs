@@ -52,7 +52,7 @@ namespace Core
             {
                 if (token.Type == TokenType.WORD)
                 {
-                    dict[token.Name] = Source.ORIGINAL; // Will rewrite on duplicate key.
+                    dict[token.Content] = Source.ORIGINAL; // Will rewrite on duplicate key.
                 }
             }
         }
@@ -181,7 +181,7 @@ namespace Core
             {
                 if (tkn.Type == TokenType.WORD)
                 {
-                    tkn.Stats = factory.GetTokenStats(tkn.Name);
+                    tkn.Stats = factory.GetTokenStats(tkn.Content);
                 }
                 yield return tkn;
             }
@@ -214,14 +214,14 @@ namespace Core
                     {
                         yield return new Token
                         {
-                            Name = content.Substring(position, match.Index - position),
+                            Content = content.Substring(position, match.Index - position),
                             Type = TokenType.NONWORD
                         };
                     }
                     // Return the word
                     Token tkn = new Token
                     {
-                        Name = match.Value,
+                        Content = match.Value,
                         Type = TokenType.WORD
                     };
                     yield return tkn;
@@ -231,7 +231,7 @@ namespace Core
                 else
                 {
                     // No words left, return some trailing characters
-                    yield return new Token { Name = content.Substring(position), Type = TokenType.NONWORD };
+                    yield return new Token { Content = content.Substring(position), Type = TokenType.NONWORD };
                     position = content.Length;
                 }
             }
