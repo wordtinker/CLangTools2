@@ -6,19 +6,20 @@ using Shared.Tools;
 
 namespace Models
 {
-    class Analyzer
+    internal class Analyzer
     {
         private IProject project;
         private IEnumerable<IDict> dictionaries;
         private ILexer lexer;
+        private Printer printer;
 
-        public Analyzer(IProject project, IEnumerable<IDict> dictionaries )
+        internal Analyzer(IProject project, IEnumerable<IDict> dictionaries)
         {
             this.project = project;
             this.dictionaries = dictionaries;
             this.lexer = ModelFactory.Lexer;
-            // TODO
-            //printer.LoadStyle();
+            this.printer = new Printer();
+            printer.LoadStyle(project.Parent.Language);
             PrepareLexer();
         }
         private void PrepareLexer()
@@ -48,16 +49,15 @@ namespace Models
             if (IO.ReadAllLines(fileStats.FilePath, out string[] content))
             {
                 // Build tree from text
-                var tree = ModelFactory.TreeBuilder.Build(fileStats.FileName, content);
+                var tree = ModelFactory.TreeBuilder.Compose(content);
                 // Get stats for every element of the tree
                 tree = lexer.AnalyzeText(tree);
                 fileStats.Size = tree.Size;
                 fileStats.Known = tree.Known;
                 fileStats.Maybe = tree.Maybe;
-                // TODO
                 // Produce new output page
-                //string outPath = printer.Print(docRoot);
-                //file.OutPath = outPath;
+                string outPath = printer.Print(tree, fileStats.FileName, fileStats.FilePath);
+                fileStats.OutPath = outPath;
                 // Update stats in the DB
                 ModelFactory.Storage.CommitStats(fileStats.FileName, fileStats.FilePath,
                     project.Parent.Language, project.Name,

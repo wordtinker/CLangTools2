@@ -24,7 +24,7 @@ namespace Models.Interfaces
     }
     public interface IFileStats : IFile
     {
-        string OutPath { get; }
+        string OutPath { get; set; }
         int? Size { get; set; }
         int? Known { get; set; }
         int? Maybe { get; set; }

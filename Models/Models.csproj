@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Analyzer.cs" />
     <Compile Include="Models.cs" />
+    <Compile Include="Printer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Core.Interfaces
 {
@@ -25,6 +26,7 @@ namespace Core.Interfaces
         IEnumerable<IItem> Items { get; }
         int Known { get; }
         int Maybe { get; }
+        // TODO drop name
         string Name { get; set; }
         int Size { get; }
         IEnumerable<IToken> Tokens { get; }
@@ -54,6 +56,8 @@ namespace Core.Interfaces
     }
     public interface ITreeBuilder
     {
-        IItem Build(string name, string[] content);
+        IItem Compose(string[] content);
+        string Decompose(IItem root, Func<IItem, string> rootDecorator,
+            Func<IItem, string> paragraphDecorator, Func<IItem, string> wordDecorator);
     }
 }

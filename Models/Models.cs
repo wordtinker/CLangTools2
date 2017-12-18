@@ -91,7 +91,7 @@ namespace Models
     {
         public string FileName { get; internal set; }
         public string FilePath { get; internal set; }
-        public string OutPath { get; internal set; }
+        public string OutPath { get; set; }
 
         public int? Size { get; set; }
         public int? Known { get; set; }

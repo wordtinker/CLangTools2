@@ -23,6 +23,24 @@ namespace Shared
         public class IO
         {
             /// <summary>
+            /// Saves the content to the file.
+            /// </summary>
+            /// <param name="filePath"></param>
+            /// <param name="content"></param>
+            /// <returns></returns>
+            public static bool SaveFile(string filePath, string content)
+            {
+                try
+                {
+                    File.WriteAllText(filePath, content);
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            /// <summary>
             /// Provides list of directory names in the given directory.
             /// </summary>
             /// <param name="dir"></param>
