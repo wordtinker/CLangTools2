@@ -28,7 +28,7 @@ namespace Models.Interfaces
         int? Size { get; set; }
         int? Known { get; set; }
         int? Maybe { get; set; }
-        int? Unknown { get; set; }
+        int? Unknown { get; }
     }
     public enum DictType
     {

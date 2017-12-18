@@ -54,8 +54,6 @@ namespace Models
                 fileStats.Size = tree.Size;
                 fileStats.Known = tree.Known;
                 fileStats.Maybe = tree.Maybe;
-                // TODO check this inside fileStats
-                fileStats.Unknown = fileStats.Size - fileStats.Known - fileStats.Maybe;
                 // TODO
                 // Produce new output page
                 //string outPath = printer.Print(docRoot);

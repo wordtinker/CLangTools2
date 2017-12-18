@@ -96,7 +96,7 @@ namespace Models
         public int? Size { get; set; }
         public int? Known { get; set; }
         public int? Maybe { get; set; }
-        public int? Unknown { get; set; }
+        public int? Unknown => Size - Known - Maybe;
         // Override Equals
         public override bool Equals(object obj)
         {
@@ -259,7 +259,6 @@ namespace Models
                         Size = size,
                         Known = known,
                         Maybe = maybe,
-                        Unknown = unknown,
                         OutPath = outPath
                     });
                 }
