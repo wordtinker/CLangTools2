@@ -1,5 +1,6 @@
 ﻿using Models;
 using System;
+using System.Reflection;
 using System.Windows;
 using ViewModels;
 using ViewModels.Interfaces;
@@ -44,9 +45,8 @@ namespace LangTools
         }
         public void ShowHelp()
         {
-            MessageBox.Show("!!!");
-            // TODO Later STUB 3 assemblies
-            //string.Format("{0}: {1}", windowService.AppName, CoreAssembly.Version);
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            MessageBox.Show($"LangTools: {version.ToString()}");
         }
         public void Shutdown()
         {
