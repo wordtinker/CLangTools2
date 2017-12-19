@@ -57,7 +57,7 @@ namespace Models
             {
                 if (Config.WorkingDirectory == null) throw new ArgumentNullException("WorkingDirectory", "Working directory is not set");
                 return storage ??
-                    (storage = new StubStorage(Config.WorkingDirectory));
+                    (storage = new SQLiteStorage(Config.WorkingDirectory));
             }
         }
     }
