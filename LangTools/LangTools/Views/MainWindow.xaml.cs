@@ -83,17 +83,5 @@ namespace LangTools
                 vm.HighlightFilesWithWord(wordVM);
             }
         }
-
-        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Ensure that one of the languages is always selected
-            if (languagesBox.SelectedIndex == -1)
-            {
-                App.Logger.Log("Fix language selection", Category.Debug, Priority.Medium);
-                // if there are no languages to select "set;" will be ignored
-                // and wont raise new SelectionChanged Event.
-                languagesBox.SelectedIndex = 0;
-            }
-        }
     }
 }

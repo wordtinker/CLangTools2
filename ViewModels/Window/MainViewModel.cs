@@ -4,6 +4,7 @@ using Prism.Logging;
 using Prism.Mvvm;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -124,6 +125,19 @@ namespace ViewModels
             this.dataProvider = dataProvider;
             this.logger = logger;
             Languages = new ObservableCollection<LingvaViewModel>();
+            Languages.CollectionChanged += (sender, e) =>
+            {
+                // Something was added to empty collection
+                if (e.Action == NotifyCollectionChangedAction.Add && e.NewStartingIndex == 0)
+                {
+                    CurrentLanguage = e.NewItems[0] as LingvaViewModel;
+                }
+                // Something was removed from 0 position
+                else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldStartingIndex == 0)
+                {
+                    CurrentLanguage = Languages.Count > 0 ? Languages[0] : null;
+                }
+            };
             Projects = new ObservableCollection<ProjectViewModel>();
             Dictionaries = new ObservableCollection<DictViewModel>();
             Files = new ObservableCollection<FileStatsViewModel>();
@@ -150,7 +164,6 @@ namespace ViewModels
             {
                 Languages.Add(new LingvaViewModel(lang));
             }
-            CurrentLanguage = Languages.Count > 0 ? Languages[0] : null;
             ProgressValue = 100;
         }
         /// <summary>

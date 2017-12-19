@@ -31,7 +31,6 @@
                     <ComboBox x:Name="languagesBox" Width="120"
                           ItemsSource="{Binding Languages}"
                           SelectedItem="{Binding CurrentLanguage}"
-                          SelectionChanged="OnSelectionChanged"
                           DisplayMemberPath="Language"
                           IsEnabled="{Binding ReadyToRun}"/>
                     <Label Content="Project"/>
