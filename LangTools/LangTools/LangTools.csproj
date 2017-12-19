@@ -110,8 +110,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
-    <None Include="plugins\English.json" />
-    <None Include="plugins\Hebrew.json" />
+    <Content Include="plugins\English.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugins\Hebrew.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -122,8 +126,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icon.ico" />
-    <Content Include="plugins\English.css" />
-    <Content Include="plugins\Hebrew.css" />
+    <Content Include="plugins\English.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugins\Hebrew.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Models.Interfaces\Models.Interfaces.csproj">
