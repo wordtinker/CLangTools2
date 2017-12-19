@@ -27,7 +27,7 @@ namespace Core
         public string Decompose(IItem root,
             Func<IItem, string> paragraphDecorator, Func<IToken, string> wordDecorator)
         {
-            foreach (Token token in root.Items.OfType<Token>())
+            foreach (Token token in root.Tokens)
             {
                 token.Content = wordDecorator.Invoke(token);
             }
