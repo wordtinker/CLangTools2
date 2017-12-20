@@ -12,7 +12,7 @@ namespace Core
         // List of subnodes.
         protected List<IItem> items = new List<IItem>();
         /// <summary>
-        /// Name of the node
+        /// Content of the node
         /// </summary>
         public virtual string Content { get; set; }
         /// <summary>
