@@ -101,7 +101,7 @@ namespace Storage
         /// <summary>
         /// Removes the stats of the given language from DB.
         /// </summary>
-        /// <param name="language"></param>
+        /// <param name="name"></param>
         public void RemoveLanguage(string name)
         {
             SQLiteParameter param = new SQLiteParameter("@lang")
@@ -241,7 +241,8 @@ namespace Storage
         /// <summary>
         /// Add new set of stats into DB.
         /// </summary>
-        public void CommitStats(string name, string path, string lang, string project, int size, int known, int maybe, int unknown)
+        public void CommitStats(string name, string path, string lang, string project,
+            int size, int known, int maybe, int unknown)
         {
             string sql = "INSERT OR REPLACE INTO Files " +
                 "VALUES(@name, @path, @lang, @project, @size, @known, @maybe, @unknown)";
@@ -348,13 +349,12 @@ namespace Storage
         }
         /// <summary>
         /// Provides the list of unknown words and quantities for given
-        /// language, project and file.
+        /// file.
         /// </summary>
         /// <param name="filePath">path to file</param>
         /// <returns></returns>
         public IEnumerable<(string, int)> GetUnknownWords(string filePath)
         {
-
             SQLiteParameter fileParam = new SQLiteParameter("@file")
             {
                 Value = filePath,
@@ -428,6 +428,11 @@ namespace Storage
                 }
             }
         }
+        /// <summary>
+        /// Checks if language already stored in DB.
+        /// </summary>
+        /// <param name="langName"></param>
+        /// <returns></returns>
         public bool LanguageExists(string langName)
         {
             string sql = "SELECT EXISTS(SELECT 1 FROM Languages WHERE lang=@lang LIMIT 1)";
@@ -438,6 +443,11 @@ namespace Storage
             };
             return ParamExists(sql, lang);
         }
+        /// <summary>
+        /// Checks if folder already stored in DB.
+        /// </summary>
+        /// <param name="folderName"></param>
+        /// <returns></returns>
         public bool FolderExists(string folderName)
         {
             string sql = "SELECT EXISTS(SELECT 1 FROM Languages WHERE directory=@dir LIMIT 1)";
@@ -448,6 +458,12 @@ namespace Storage
             };
             return ParamExists(sql, dir);
         }
+        /// <summary>
+        /// Checks if parameter exist in DB.
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
         private bool ParamExists(string sql, SQLiteParameter param)
         {
             bool exists = false;
