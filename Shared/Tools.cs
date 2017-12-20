@@ -10,6 +10,12 @@ namespace Shared
     {
         public class Math
         {
+            /// <summary>
+            /// Divides and converts int? into double.
+            /// </summary>
+            /// <param name="dividend"></param>
+            /// <param name="divisor"></param>
+            /// <returns></returns>
             public static double? TakePercent(int? dividend, int? divisor)
             {
                 if (divisor == null || divisor == 0 || dividend == null)
