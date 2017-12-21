@@ -135,7 +135,7 @@
                             </Style>
                         </DataGrid.Resources>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="File Name" Width="Auto" Binding="{Binding FileName}"/>
+                            <DataGridTextColumn Header="File Name" Width="*" Binding="{Binding FileName}"/>
                             <DataGridTextColumn Header="Size" Width="*" Binding="{Binding Size}"/>
                             <DataGridTextColumn Header="Known" Width="*" Binding="{Binding Known}"/>
                             <DataGridTextColumn Header="%" Width="*" Binding="{Binding KnownPercent, StringFormat=F}"/>
