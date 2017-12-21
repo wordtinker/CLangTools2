@@ -15,7 +15,7 @@ namespace ViewModels
         public IFileStats FileStats { get => fileStats; }
         public string FileName { get => fileStats.FileName; }
         public string FilePath { get => fileStats.FilePath; }
-        public string OutPath { get => fileStats.OutPath; }
+        public string OutPath { get; private set; }
         public int? Size { get; private set; }
         public int? Known { get; private set; }
         public int? Unknown { get; private set; }
@@ -40,6 +40,7 @@ namespace ViewModels
             Known = fileStats.Known;
             Unknown = fileStats.Unknown;
             Maybe = fileStats.Maybe;
+            OutPath = fileStats.OutPath;
             // Notify that every Property changed
             RaisePropertyChanged(string.Empty);
         }
