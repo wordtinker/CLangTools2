@@ -10,6 +10,10 @@ using System.Linq;
 
 namespace Models
 {
+    /// <summary>
+    /// Configurational class that holds necessary
+    /// settings for proper work.
+    /// </summary>
     public static class Config
     {
         private static string commonDictionaryName = "Common";
@@ -24,6 +28,10 @@ namespace Models
         public static readonly string FileExtension = ".txt";
         public static readonly string OutExtension = ".html";
     }
+    /// <summary>
+    /// Container that provides model and validator classes for
+    /// an app, and some internal classes.
+    /// </summary>
     public static class ModelFactory
     {
         private static IStorage storage;
@@ -61,7 +69,9 @@ namespace Models
             }
         }
     }
-
+    /// <summary>
+    /// Validator class.
+    /// </summary>
     public class LingvaValidator : IValidate
     {
         private IStorage storage;
@@ -314,7 +324,7 @@ namespace Models
             foreach (IFileStats fileStats in files)
             {
                 percentValue += step;
-                IFileStats newFileStats = worker.AnalyzeFile(project, fileStats);
+                IFileStats newFileStats = worker.AnalyzeFile(fileStats);
                 progress.Report((percentValue, newFileStats));
             }
             progress.Report((100d, null));

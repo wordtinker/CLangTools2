@@ -12,6 +12,11 @@ namespace Models
         private const string STYLEEXT = ".css";
         private string css;
 
+        /// <summary>
+        /// Finds CSS file for a given language and saves it
+        /// for later use in printing.
+        /// </summary>
+        /// <param name="language"></param>
         internal void LoadStyle(string language)
         {
             // Load CSS file
@@ -33,6 +38,12 @@ namespace Models
             IO.ChangeExtension(filePath, Config.OutExtension, out string outPath);
             return IO.SaveFile(outPath, HTML) ? outPath : null;
         }
+        /// <summary>
+        /// Makes an HTML page out of IITem.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="header"></param>
+        /// <returns></returns>
         private string ToHTML(IItem root, string header)
         {
             StringBuilder sb = new StringBuilder();

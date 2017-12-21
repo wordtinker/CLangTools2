@@ -6,6 +6,10 @@ using Shared.Tools;
 
 namespace Models
 {
+    /// <summary>
+    /// Class that combines needful classes,
+    /// makes analysis and stores the new data.
+    /// </summary>
     internal class Analyzer
     {
         private IProject project;
@@ -43,8 +47,7 @@ namespace Models
             // Expand dictionary
             lexer.ExpandDictionary();
         }
-
-        internal IFileStats AnalyzeFile(IProject project, IFileStats fileStats)
+        internal IFileStats AnalyzeFile(IFileStats fileStats)
         {
             if (IO.ReadAllLines(fileStats.FilePath, out string[] content))
             {
