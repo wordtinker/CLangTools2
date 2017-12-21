@@ -201,10 +201,22 @@ namespace Models
                 {
                     if (IO.CombinePath(out string path, lingva.Folder, name))
                     {
+                        FixCommonDictionary(path);
                         yield return new Project { Name = name, Folder = path, Parent = lingva};
                     }
                 }
             }
+        }
+        /// <summary>
+        /// Creates common dictionary file inside the project
+        /// if it's missing.
+        /// </summary>
+        /// <param name="path"></param>
+        private void FixCommonDictionary(string path)
+        {
+            IO.CombinePath(out string dicPath, path, Config.CommonDictionaryName);
+            IO.ChangeExtension(dicPath, Config.DictExtension, out dicPath);
+            IO.AppendToFile(dicPath, string.Empty);
         }
         private IEnumerable<IFileStats> GetFiles(string folder)
         {
