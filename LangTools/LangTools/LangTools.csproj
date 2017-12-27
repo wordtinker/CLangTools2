@@ -134,13 +134,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ModelFactory.Interfaces\ModelFactory.Interfaces.csproj">
+      <Project>{6a864cd9-6753-498d-b9fb-a334b9eb4d3b}</Project>
+      <Name>ModelFactory.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ModelFactory\ModelFactory.csproj">
+      <Project>{4c02d914-ca80-47e3-b08a-6efd5c4b0247}</Project>
+      <Name>ModelFactory</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Models.Interfaces\Models.Interfaces.csproj">
       <Project>{9f81230e-9b94-432d-b152-df94679a369b}</Project>
       <Name>Models.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Models\Models.csproj">
-      <Project>{b9a2d65c-d48a-45b2-90b5-d62898306489}</Project>
-      <Name>Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Shared\Shared.csproj">
       <Project>{53b88932-2640-4cf0-9049-40663f53aa97}</Project>

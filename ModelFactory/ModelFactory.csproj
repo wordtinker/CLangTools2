@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B9A2D65C-D48A-45B2-90B5-D62898306489}</ProjectGuid>
+    <ProjectGuid>{4C02D914-CA80-47E3-B08A-6EFD5C4B0247}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Models</RootNamespace>
-    <AssemblyName>Models</AssemblyName>
+    <RootNamespace>ModelFactory</RootNamespace>
+    <AssemblyName>ModelFactory</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -41,27 +41,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analyzer.cs" />
-    <Compile Include="Models.cs" />
-    <Compile Include="Printer.cs" />
+    <Compile Include="ModelFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core.Interfaces\Core.Interfaces.csproj">
-      <Project>{cd1ba3a7-c267-4c48-b0f9-f58b7f7ef013}</Project>
+      <Project>{CD1BA3A7-C267-4C48-B0F9-F58B7F7EF013}</Project>
       <Name>Core.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{6A53CE2F-4996-4CB3-827F-3A8152B6F771}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModelFactory.Interfaces\ModelFactory.Interfaces.csproj">
+      <Project>{6a864cd9-6753-498d-b9fb-a334b9eb4d3b}</Project>
+      <Name>ModelFactory.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Models.Interfaces\Models.Interfaces.csproj">
-      <Project>{9f81230e-9b94-432d-b152-df94679a369b}</Project>
+      <Project>{9F81230E-9B94-432D-B152-DF94679A369B}</Project>
       <Name>Models.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Shared\Shared.csproj">
-      <Project>{53b88932-2640-4cf0-9049-40663f53aa97}</Project>
-      <Name>Shared</Name>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{b9a2d65c-d48a-45b2-90b5-d62898306489}</Project>
+      <Name>Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\Storage.Interfaces\Storage.Interfaces.csproj">
       <Project>{01bf48ad-e445-4e22-b1a0-0670e210f441}</Project>
       <Name>Storage.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Storage\Storage.csproj">
+      <Project>{f06cfc3f-3d1b-4c67-bba5-011173b9b9ca}</Project>
+      <Name>Storage</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

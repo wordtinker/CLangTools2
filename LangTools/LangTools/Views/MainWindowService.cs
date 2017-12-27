@@ -1,5 +1,4 @@
-﻿using Models;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Windows;
 using ViewModels;
@@ -33,8 +32,8 @@ namespace LangTools
         public void ManageLanguages()
         {
             LangWindowViewModel vm = new LangWindowViewModel(
-                (MainViewModel)mainWindow.DataContext, this, ModelFactory.Validator,
-                ModelFactory.Model, App.Logger);
+                (MainViewModel)mainWindow.DataContext, this, App.ModelFactory.Validator,
+                App.ModelFactory.Model, App.Logger);
             LangManager window = new LangManager
             {
                 DataContext = vm,

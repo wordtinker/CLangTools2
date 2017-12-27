@@ -3,6 +3,7 @@ using System.Linq;
 using Core.Interfaces;
 using Models.Interfaces;
 using Shared.Tools;
+using Storage.Interfaces;
 
 namespace Models
 {
@@ -12,17 +13,21 @@ namespace Models
     /// </summary>
     internal class Analyzer
     {
+        private IStorage storage;
+        private ITreeBuilder treeBuilder;
         private IProject project;
         private IEnumerable<IDict> dictionaries;
         private ILexer lexer;
         private Printer printer;
 
-        internal Analyzer(IProject project, IEnumerable<IDict> dictionaries)
+        internal Analyzer(IStorage storage, ILexer lexer, ITreeBuilder treeBuilder, IProject project, IEnumerable<IDict> dictionaries)
         {
+            this.storage = storage;
+            this.treeBuilder = treeBuilder;
             this.project = project;
             this.dictionaries = dictionaries;
-            this.lexer = ModelFactory.Lexer;
-            this.printer = new Printer();
+            this.lexer = lexer;
+            this.printer = new Printer(treeBuilder);
             printer.LoadStyle(project.Parent.Language);
             PrepareLexer();
         }
@@ -52,7 +57,7 @@ namespace Models
             if (IO.ReadAllLines(fileStats.FilePath, out string[] content))
             {
                 // Build tree from text
-                var tree = ModelFactory.TreeBuilder.Compose(content);
+                var tree = treeBuilder.Compose(content);
                 // Get stats for every element of the tree
                 tree = lexer.AnalyzeText(tree);
                 fileStats.Size = tree.Size;
@@ -62,7 +67,7 @@ namespace Models
                 string outPath = printer.Print(tree, fileStats.FileName, fileStats.FilePath);
                 fileStats.OutPath = outPath;
                 // Update stats in the DB
-                ModelFactory.Storage.CommitStats(fileStats.FileName, fileStats.FilePath,
+                storage.CommitStats(fileStats.FileName, fileStats.FilePath,
                     project.Parent.Language, project.Name,
                     fileStats.Size.GetValueOrDefault(), fileStats.Known.GetValueOrDefault(),
                     fileStats.Maybe.GetValueOrDefault(), fileStats.Unknown.GetValueOrDefault());
@@ -71,7 +76,7 @@ namespace Models
                                 .Where(t => t.Stats?.Know == Klass.UNKNOWN)
                                 .Select(t => t.Stats)
                                 .Distinct().Select(ts => (ts.LWord, ts.Count));
-                ModelFactory.Storage.CommitWords(fileStats.FilePath, newWords);
+                storage.CommitWords(fileStats.FilePath, newWords);
             }
             return fileStats;
         }

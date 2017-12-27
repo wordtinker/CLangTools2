@@ -1,4 +1,4 @@
-﻿using Models;
+﻿using ModelFactory.Interfaces;
 using Models.Interfaces;
 using Prism.Logging;
 using Shared.Tools;
@@ -16,6 +16,7 @@ namespace LangTools
     public partial class App : Application
     {
         public static ILoggerFacade Logger { get; private set; }
+        public static IModelFactory ModelFactory { get; private set; }
         /// <summary>
         /// Prepares environmental settings for app and starts.
         /// </summary>
@@ -46,9 +47,7 @@ namespace LangTools
 
             // Configure and start model
             IO.CombinePath(out string stylePath, Directory.GetCurrentDirectory(), "plugins");
-            Config.StyleDirectoryPath = stylePath;
-            Config.CommonDictionaryName = Tools.Settings.Read("commonDic");
-            Config.WorkingDirectory = appDir;
+            ModelFactory = new ModelFactory.ModelFactory(appDir, stylePath, Tools.Settings.Read("commonDic"));
             IDataProvider dataProvider = ModelFactory.Model;
             // Create logger
             Logger = new SimpleLogger(appDir);

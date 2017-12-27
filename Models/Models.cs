@@ -1,8 +1,6 @@
-﻿using Core;
-using Core.Interfaces;
+﻿using Core.Interfaces;
 using Models.Interfaces;
 using Shared.Tools;
-using Storage;
 using Storage.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -23,51 +21,9 @@ namespace Models
             set => commonDictionaryName = string.IsNullOrWhiteSpace(value) ? commonDictionaryName : value;
         }
         public static string StyleDirectoryPath { get; set; } = null;
-        public static string WorkingDirectory { get; set; } = null;
         public static readonly string DictExtension = ".dct";
         public static readonly string FileExtension = ".txt";
         public static readonly string OutExtension = ".html";
-    }
-    /// <summary>
-    /// Container that provides model and validator classes for
-    /// an app, and some internal classes.
-    /// </summary>
-    public static class ModelFactory
-    {
-        private static IStorage storage;
-        private static IDataProvider dataProvider;
-        private static IValidate validator;
-
-        public static IDataProvider Model
-        {
-            get
-            {
-                return dataProvider ??
-                    (dataProvider = new Model(Storage));
-            }
-        }
-        public static IValidate Validator
-        {
-            get
-            {
-                return validator ??
-                    (validator = new LingvaValidator(Storage));
-            }
-        }
-        internal static ITreeBuilder TreeBuilder { get; } = new TreeBuilder();
-        internal static ILexer Lexer
-        {
-            get => new Lexer();
-        }
-        internal static IStorage Storage
-        {
-            get
-            {
-                if (Config.WorkingDirectory == null) throw new ArgumentNullException("WorkingDirectory", "Working directory is not set");
-                return storage ??
-                    (storage = new SQLiteStorage(Config.WorkingDirectory));
-            }
-        }
     }
     /// <summary>
     /// Validator class.
@@ -75,7 +31,7 @@ namespace Models
     public class LingvaValidator : IValidate
     {
         private IStorage storage;
-        internal LingvaValidator(IStorage storage)
+        public LingvaValidator(IStorage storage)
         {
             this.storage = storage;
         }
@@ -159,9 +115,14 @@ namespace Models
     public class Model : IDataProvider
     {   // Members
         private IStorage storage;
+        private Func<ILexer> getLexer;
+        private Func<ITreeBuilder> getTreeBuilder;
+
         // ctor
-        internal Model(IStorage storage)
+        public Model(IStorage storage, Func<ILexer> getLexer, Func<ITreeBuilder> getTreeBuilder)
         {
+            this.getLexer = getLexer;
+            this.getTreeBuilder = getTreeBuilder;
             this.storage = storage;
         }
         // Methods
@@ -328,7 +289,7 @@ namespace Models
             var files = GetFiles(project.Folder);
             var dictionaries = GetProjectDictionaries(project);
             // Create object that handles analysis.
-            Analyzer worker = new Analyzer(project, dictionaries);
+            Analyzer worker = new Analyzer(storage, getLexer.Invoke(), getTreeBuilder.Invoke(), project, dictionaries);
             progress.Report((30d, null));
             double percentValue = 30;
             double step = 70.0 / files.Count();

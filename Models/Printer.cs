@@ -11,7 +11,12 @@ namespace Models
     {
         private const string STYLEEXT = ".css";
         private string css;
+        private ITreeBuilder treeBuilder;
 
+        public Printer(ITreeBuilder treeBuilder)
+        {
+            this.treeBuilder = treeBuilder;
+        }
         /// <summary>
         /// Finds CSS file for a given language and saves it
         /// for later use in printing.
@@ -50,7 +55,7 @@ namespace Models
             sb.Append("<html><head><meta charset='utf-8'>");
             sb.Append(string.Format("<title>{0}</title></head>", header));
             sb.Append("<body><article>");
-            sb.Append(ModelFactory.TreeBuilder.Decompose(root,
+            sb.Append(treeBuilder.Decompose(root,
                 p => $"<p>{p.Content}</p>",
                 w =>
                 {
