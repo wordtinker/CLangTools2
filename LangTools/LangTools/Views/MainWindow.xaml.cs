@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Unity;
 using ViewModels;
 
 namespace LangTools
@@ -11,11 +12,13 @@ namespace LangTools
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ILoggerFacade logger;
         // Constructor
         public MainWindow()
         {
             InitializeComponent();
-            App.Logger.Log("MainWindow has started.", Category.Debug, Priority.Medium);
+            this.logger = App.Container.Resolve<ILoggerFacade>();
+            logger.Log("MainWindow has started.", Category.Debug, Priority.Medium);
         }
         /// <summary>
         /// Responds to DoubleClick even in the dataGrid with files.
@@ -24,7 +27,7 @@ namespace LangTools
         /// <param name="e"></param>
         private void FilesRow_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            App.Logger.Log("Dbl click on file", Category.Debug, Priority.Medium);
+            logger.Log("Dbl click on file", Category.Debug, Priority.Medium);
             if (sender is DataGridRow row && row.DataContext is FileStatsViewModel fsvm)
             {
                 // Let the view model open the output file.
@@ -42,7 +45,7 @@ namespace LangTools
         /// <param name="e"></param>
         private void DictsRow_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            App.Logger.Log("Dbl click on dictionary", Category.Debug, Priority.Medium);
+            logger.Log("Dbl click on dictionary", Category.Debug, Priority.Medium);
             if (sender is DataGridRow row && row.DataContext is DictViewModel dvm)
             {
                 // Let the view model open the dictionary.
@@ -60,7 +63,7 @@ namespace LangTools
         /// <param name="e"></param>
         private void WordRow_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            App.Logger.Log("Dbl click on word", Category.Debug, Priority.Medium);
+            logger.Log("Dbl click on word", Category.Debug, Priority.Medium);
             MainViewModel vm = (MainViewModel)base.DataContext;
             if (sender is DataGridRow item && item.DataContext is WordViewModel wordVM)
             {
@@ -75,7 +78,7 @@ namespace LangTools
         /// <param name="e"></param>
         private void WordRow_SingleClick(object sender, MouseButtonEventArgs e)
         {
-            App.Logger.Log("Single click on word", Category.Debug, Priority.Medium);
+            logger.Log("Single click on word", Category.Debug, Priority.Medium);
             MainViewModel vm = (MainViewModel)base.DataContext;
             if (sender is DataGridRow item && item.DataContext is WordViewModel wordVM)
             {

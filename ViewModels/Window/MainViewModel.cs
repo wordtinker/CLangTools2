@@ -1,5 +1,6 @@
 ﻿using Models.Interfaces;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Logging;
 using Prism.Mvvm;
 using System;
@@ -8,6 +9,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ViewModels.Events;
 using ViewModels.Interfaces;
 
 namespace ViewModels
@@ -119,25 +121,15 @@ namespace ViewModels
         public ICommand DeleteFile { get; }
 
         // ctor
-        public MainViewModel(IUIMainWindowService windowService, IDataProvider dataProvider, ILoggerFacade logger)
+        public MainViewModel(IUIMainWindowService windowService, IDataProvider dataProvider,
+            ILoggerFacade logger, IEventAggregator eventAggregator)
         {
             this.windowService = windowService;
             this.dataProvider = dataProvider;
             this.logger = logger;
             Languages = new ObservableCollection<LingvaViewModel>();
-            Languages.CollectionChanged += (sender, e) =>
-            {
-                // Something was added to empty collection
-                if (e.Action == NotifyCollectionChangedAction.Add && e.NewStartingIndex == 0)
-                {
-                    CurrentLanguage = e.NewItems[0] as LingvaViewModel;
-                }
-                // Something was removed from 0 position
-                else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldStartingIndex == 0)
-                {
-                    CurrentLanguage = Languages.Count > 0 ? Languages[0] : null;
-                }
-            };
+            eventAggregator.GetEvent<LanguageAddedEvent>().Subscribe(AddAndFixLanguage);
+            eventAggregator.GetEvent<LanguageDeletedEvent>().Subscribe(RemoveAndFixLanguage);
             Projects = new ObservableCollection<ProjectViewModel>();
             Dictionaries = new ObservableCollection<DictViewModel>();
             Files = new ObservableCollection<FileStatsViewModel>();
@@ -158,11 +150,21 @@ namespace ViewModels
             logger.Log("MainView has started.", Category.Debug, Priority.Medium);
         }
         // Methods
+        private void AddAndFixLanguage(LingvaViewModel lvm)
+        {
+            Languages.Add(lvm);
+            if (CurrentLanguage == null) CurrentLanguage = lvm;
+        }
+        private void RemoveAndFixLanguage(LingvaViewModel lvm)
+        {
+            Languages.Remove(lvm);
+            CurrentLanguage = Languages.Count > 0 ? Languages[0] : null;
+        }
         private void OnLoad()
         {
             foreach (ILingva lang in dataProvider.GetLanguages())
             {
-                Languages.Add(new LingvaViewModel(lang));
+                AddAndFixLanguage(new LingvaViewModel(lang));
             }
             ProgressValue = 100;
         }

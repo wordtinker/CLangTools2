@@ -1,6 +1,11 @@
-﻿using System;
+﻿using Models.Interfaces;
+using Prism.Events;
+using Prism.Logging;
+using System;
 using System.Reflection;
 using System.Windows;
+using Unity;
+using Unity.Resolution;
 using ViewModels;
 using ViewModels.Interfaces;
 
@@ -31,15 +36,14 @@ namespace LangTools
 
         public void ManageLanguages()
         {
-            LangWindowViewModel vm = new LangWindowViewModel(
-                (MainViewModel)mainWindow.DataContext, this, App.ModelFactory.Validator,
-                App.ModelFactory.Model, App.Logger);
             LangManager window = new LangManager
             {
-                DataContext = vm,
                 // Ensure the alt+tab is working properly.
                 Owner = mainWindow
             };
+            var service = new MainWindowService(window);
+            window.DataContext = App.Container.Resolve<LangWindowViewModel>(
+                new ParameterOverride("windowService", service));
             window.ShowDialog();
         }
         public void ShowHelp()

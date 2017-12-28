@@ -104,6 +104,19 @@ namespace Models
         // Properties
         public string Language { get; set; }
         public string Folder { get; set; }
+        // Equals implementation
+        public override bool Equals(object obj)
+        {
+            if (obj is Lingva other)
+            {
+                return this.Folder.Equals(other.Folder) && this.Language.Equals(other.Language);
+            }
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return Folder.GetHashCode();
+        }
     }
     public class Project : IProject
     {

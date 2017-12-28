@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Elements\DictViewModel.cs" />
     <Compile Include="Elements\FileStatsViewModel.cs" />
+    <Compile Include="Events\Events.cs" />
     <Compile Include="Window\LangWindowViewModel.cs" />
     <Compile Include="Elements\LingvaViewModel.cs" />
     <Compile Include="Window\MainViewModel.cs" />

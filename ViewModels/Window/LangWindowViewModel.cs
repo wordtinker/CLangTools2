@@ -1,5 +1,6 @@
 ﻿using Models.Interfaces;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Logging;
 using Prism.Mvvm;
 using System;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
+using ViewModels.Events;
 using ViewModels.Interfaces;
 
 namespace ViewModels
@@ -92,7 +94,7 @@ namespace ViewModels
     public partial class LangWindowViewModel : BindableBase
     {
         //Members
-        private MainViewModel mediatorVM;
+        private IEventAggregator eventAggregator;
         private IUIMainWindowService windowService;
         private IDataProvider dataProvider;
         private ILoggerFacade logger;
@@ -100,7 +102,7 @@ namespace ViewModels
         private string folder;
 
         // Properties
-        public ObservableCollection<LingvaViewModel> Languages { get => mediatorVM.Languages; }
+        public ObservableCollection<LingvaViewModel> Languages { get; }
         public LingvaViewModel SelectedLanguage { get; set; }
         public string Language
         {
@@ -116,10 +118,10 @@ namespace ViewModels
         public ICommand AddLanguage { get; }
         public ICommand RemoveLanguage { get; }
         // ctor
-        public LangWindowViewModel(MainViewModel mediatorVM, IUIMainWindowService windowService,
-            IValidate validator, IDataProvider dataProvider, ILoggerFacade logger)
+        public LangWindowViewModel(IUIMainWindowService windowService, IDataProvider dataProvider, IValidate validator,
+            ILoggerFacade logger, IEventAggregator eventAggregator)
         {
-            this.mediatorVM = mediatorVM;
+            this.eventAggregator = eventAggregator;
             this.windowService = windowService;
             this.validator = validator;
             this.dataProvider = dataProvider;
@@ -128,6 +130,12 @@ namespace ViewModels
             GetFolder = new DelegateCommand(_GetFolder);
             AddLanguage = new DelegateCommand(_AddLanguage);
             RemoveLanguage = new DelegateCommand(_RemoveLanguage);
+            // Display initial list of languages
+            Languages = new ObservableCollection<LingvaViewModel>();
+            foreach (ILingva lang in dataProvider.GetLanguages())
+            {
+                Languages.Add(new LingvaViewModel(lang));
+            }
         }
         // Methods
         private void _GetFolder()
@@ -143,7 +151,9 @@ namespace ViewModels
         {
             logger.Log("Adding new language.", Category.Debug, Priority.Medium);
             ILingva newLang = dataProvider.CreateLanguage(Language, Folder);
-            Languages.Add(new LingvaViewModel(newLang));
+            LingvaViewModel lvm = new LingvaViewModel(newLang);
+            Languages.Add(lvm);
+            eventAggregator.GetEvent<LanguageAddedEvent>().Publish(lvm);
             // Clear text controls.
             Language = string.Empty;
             Folder = string.Empty;
@@ -156,6 +166,7 @@ namespace ViewModels
                     Category.Debug, Priority.Medium);
                 ILingva lang = SelectedLanguage.Lingva;
                 dataProvider.RemoveLanguage(lang);
+                eventAggregator.GetEvent<LanguageDeletedEvent>().Publish(SelectedLanguage);
                 Languages.Remove(SelectedLanguage);
             }
         }

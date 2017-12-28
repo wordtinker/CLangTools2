@@ -1,10 +1,12 @@
-﻿using ModelFactory.Interfaces;
-using Models.Interfaces;
+﻿using Models.Interfaces;
+using Prism.Events;
 using Prism.Logging;
 using Shared.Tools;
 using System;
 using System.IO;
 using System.Windows;
+using Unity;
+using Unity.Resolution;
 using ViewModels;
 using ViewModels.Interfaces;
 
@@ -15,8 +17,7 @@ namespace LangTools
     /// </summary>
     public partial class App : Application
     {
-        public static ILoggerFacade Logger { get; private set; }
-        public static IModelFactory ModelFactory { get; private set; }
+        public static IUnityContainer Container { get; private set; }
         /// <summary>
         /// Prepares environmental settings for app and starts.
         /// </summary>
@@ -45,12 +46,18 @@ namespace LangTools
                 return;
             }
 
+            // Make unity container
+            Container = new UnityContainer();
+            // Register event aggregator
+            Container.RegisterInstance<IEventAggregator>(new EventAggregator());
+            // Register logging class
+            Container.RegisterInstance<ILoggerFacade>(new SimpleLogger(appDir));
             // Configure and start model
             IO.CombinePath(out string stylePath, Directory.GetCurrentDirectory(), "plugins");
-            ModelFactory = new ModelFactory.ModelFactory(appDir, stylePath, Tools.Settings.Read("commonDic"));
-            IDataProvider dataProvider = ModelFactory.Model;
-            // Create logger
-            Logger = new SimpleLogger(appDir);
+            // TODO LATER redo, from other container
+            var modelFactory = new ModelFactory.ModelFactory(appDir, stylePath, Tools.Settings.Read("commonDic"));
+            Container.RegisterInstance<IDataProvider>(modelFactory.Model);
+            Container.RegisterInstance<IValidate>(modelFactory.Validator);
             // Start main window
             MainWindow = new MainWindow
             {
@@ -58,7 +65,7 @@ namespace LangTools
             };
             // Inject dependencies and properties
             IUIMainWindowService service = new MainWindowService(MainWindow);
-            MainWindow.DataContext = new MainViewModel(service, dataProvider, Logger);
+            MainWindow.DataContext = Container.Resolve<MainViewModel>(new ParameterOverride("windowService", service));
             MainWindow.Show();
         }
 
@@ -69,7 +76,8 @@ namespace LangTools
         /// <param name="e"></param>
         private void HandleException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            Logger.Log(e.Exception.ToString(), Category.Exception, Priority.High);
+            Container.Resolve<ILoggerFacade>()
+                .Log(e.Exception.ToString(), Category.Exception, Priority.High);
         }
     }
 }
