@@ -158,10 +158,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ModelFactory.Interfaces\ModelFactory.Interfaces.csproj">
-      <Project>{6a864cd9-6753-498d-b9fb-a334b9eb4d3b}</Project>
-      <Name>ModelFactory.Interfaces</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\ModelFactory\ModelFactory.csproj">
       <Project>{4c02d914-ca80-47e3-b08a-6efd5c4b0247}</Project>
       <Name>ModelFactory</Name>

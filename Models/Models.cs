@@ -302,6 +302,7 @@ namespace Models
             var files = GetFiles(project.Folder);
             var dictionaries = GetProjectDictionaries(project);
             // Create object that handles analysis.
+            // TODO
             Analyzer worker = new Analyzer(storage, getLexer.Invoke(), getTreeBuilder.Invoke(), project, dictionaries);
             progress.Report((30d, null));
             double percentValue = 30;

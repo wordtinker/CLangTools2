@@ -46,18 +46,15 @@ namespace LangTools
                 return;
             }
 
-            // Make unity container
-            Container = new UnityContainer();
+            // Configure and start model
+            IO.CombinePath(out string stylePath, Directory.GetCurrentDirectory(), "plugins");
+            var modelFactory = new ModelFactory.ModelFactory(appDir, stylePath, Tools.Settings.Read("commonDic"));
+            // Make unity container out of model container
+            Container = modelFactory.Container.CreateChildContainer();
             // Register event aggregator
             Container.RegisterInstance<IEventAggregator>(new EventAggregator());
             // Register logging class
             Container.RegisterInstance<ILoggerFacade>(new SimpleLogger(appDir));
-            // Configure and start model
-            IO.CombinePath(out string stylePath, Directory.GetCurrentDirectory(), "plugins");
-            // TODO LATER redo, from other container
-            var modelFactory = new ModelFactory.ModelFactory(appDir, stylePath, Tools.Settings.Read("commonDic"));
-            Container.RegisterInstance<IDataProvider>(modelFactory.Model);
-            Container.RegisterInstance<IValidate>(modelFactory.Validator);
             // Start main window
             MainWindow = new MainWindow
             {
