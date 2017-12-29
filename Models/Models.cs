@@ -1,5 +1,4 @@
-﻿using Core.Interfaces;
-using Models.Interfaces;
+﻿using Models.Interfaces;
 using Shared.Tools;
 using Storage.Interfaces;
 using System;
@@ -128,15 +127,15 @@ namespace Models
     public class Model : IDataProvider
     {   // Members
         private IStorage storage;
-        private Func<ILexer> getLexer;
-        private Func<ITreeBuilder> getTreeBuilder;
+        //private Func<ILexer> getLexer;
+        //private Func<ITreeBuilder> getTreeBuilder;
+        private Func<Analyzer> getAnalyzer;
 
         // ctor
-        public Model(IStorage storage, Func<ILexer> getLexer, Func<ITreeBuilder> getTreeBuilder)
+        public Model(IStorage storage, Func<Analyzer> getAnalyzer)
         {
-            this.getLexer = getLexer;
-            this.getTreeBuilder = getTreeBuilder;
             this.storage = storage;
+            this.getAnalyzer = getAnalyzer;
         }
         // Methods
         public IEnumerable<ILingva> GetLanguages()
@@ -296,14 +295,13 @@ namespace Models
         public void Analyze(IProject project, IProgress<(double Progress, IFileStats FileStats)> progress)
         {
             progress.Report((0d, null));
-            // Remove old stats and words for project from DB.
-            storage.RemoveProject(project.Parent.Language, project.Name);
+            // Create object that handles analysis.
+            Analyzer worker = getAnalyzer();
             // Get file names and dic names from project dir
             var files = GetFiles(project.Folder);
             var dictionaries = GetProjectDictionaries(project);
-            // Create object that handles analysis.
-            // TODO
-            Analyzer worker = new Analyzer(storage, getLexer.Invoke(), getTreeBuilder.Invoke(), project, dictionaries);
+            // prepare analyzer for project
+            worker.SetupProject(project, dictionaries);
             progress.Report((30d, null));
             double percentValue = 30;
             double step = 70.0 / files.Count();

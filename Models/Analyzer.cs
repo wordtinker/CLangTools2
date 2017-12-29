@@ -11,7 +11,7 @@ namespace Models
     /// Class that combines needful classes,
     /// makes analysis and stores the new data.
     /// </summary>
-    internal class Analyzer
+    public class Analyzer
     {
         private IStorage storage;
         private ITreeBuilder treeBuilder;
@@ -20,14 +20,20 @@ namespace Models
         private ILexer lexer;
         private Printer printer;
 
-        internal Analyzer(IStorage storage, ILexer lexer, ITreeBuilder treeBuilder, IProject project, IEnumerable<IDict> dictionaries)
+        public Analyzer(IStorage storage, ILexer lexer, ITreeBuilder treeBuilder)
         {
             this.storage = storage;
+            this.lexer = lexer;
             this.treeBuilder = treeBuilder;
+            this.printer = new Printer(treeBuilder);
+            
+        }
+        internal void SetupProject(IProject project, IEnumerable<IDict> dictionaries)
+        {
             this.project = project;
             this.dictionaries = dictionaries;
-            this.lexer = lexer;
-            this.printer = new Printer(treeBuilder);
+            // Remove old stats and words for project from DB.
+            storage.RemoveProject(project.Parent.Language, project.Name);
             printer.LoadStyle(project.Parent.Language);
             PrepareLexer();
         }

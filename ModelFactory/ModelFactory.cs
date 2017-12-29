@@ -20,14 +20,18 @@ namespace ModelFactory
         public ModelFactory(string workingDirectory, string stylePath, string commonDicName)
         {
             if (workingDirectory == null) throw new ArgumentNullException("WorkingDirectory", "Working directory is not set");
-            IStorage storage = new SQLiteStorage(workingDirectory);
+            // Config model properties.
             Config.StyleDirectoryPath = stylePath;
             Config.CommonDictionaryName = commonDicName;
+            // Bind everything within container.
             Container = new UnityContainer();
-            // TODO
-            Container.RegisterInstance<IDataProvider>(new Model(storage, () => new Lexer(), () => TreeBuilder));
-            Container.RegisterInstance<IValidate>(new LingvaValidator(storage));
+            Container.RegisterInstance<IStorage>(new SQLiteStorage(workingDirectory));
+            Container.RegisterInstance<ITreeBuilder>(new TreeBuilder());
+            Container.RegisterType<ILexer, Lexer>();
+            Container.RegisterType<Analyzer>();
+            Container.RegisterInstance<IDataProvider>(
+                new Model(Container.Resolve<IStorage>(), () => Container.Resolve<Analyzer>()));
+            Container.RegisterType<IValidate, LingvaValidator>();
         }
-        private ITreeBuilder TreeBuilder { get; } = new TreeBuilder();
     }
 }
