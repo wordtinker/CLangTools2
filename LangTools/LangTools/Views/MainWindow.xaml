@@ -199,18 +199,18 @@
                               SelectionMode="Single"
                               IsReadOnly="True"
                               >
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Open Dictionary" Command="{Binding OpenFile}"
-                                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
-                                                             Path=PlacementTarget.SelectedItem.FilePath}"/>
-                                <MenuItem Header="Delete Dictionary" Command="{Binding DeleteFile}"
-                                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
-                                                             Path=PlacementTarget.SelectedItem.FilePath}"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
                         <DataGrid.Resources>
+                            <ContextMenu x:Key="dictsGridContextMenu"
+                                         DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                <MenuItem Header="Open Dictionary"
+                                          Command="{Binding DataContext.OpenFile, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                          CommandParameter="{Binding FilePath}"/>
+                                <MenuItem Header="Delete Dictionary"
+                                          Command="{Binding DataContext.DeleteFile, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                          CommandParameter="{Binding FilePath}"/>
+                            </ContextMenu>
                             <Style TargetType="DataGridRow">
+                                <Setter Property="ContextMenu" Value="{StaticResource dictsGridContextMenu}"/>
                                 <EventSetter Event="MouseDoubleClick" Handler="DictsRow_DoubleClick"/>
                             </Style>
                         </DataGrid.Resources>
