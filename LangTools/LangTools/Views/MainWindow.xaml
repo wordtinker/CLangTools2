@@ -107,25 +107,24 @@
                               GridLinesVisibility="Horizontal"
                               IsReadOnly="True"
                               BorderThickness="0">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Open File" Command="{Binding OpenFile}"
-                                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
-                                                             Path=PlacementTarget.SelectedItem.FilePath}"/>
-                                <MenuItem Header="Open Output File" Command="{Binding OpenFile}"
-                                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
-                                                             Path=PlacementTarget.SelectedItem.OutPath}"/>
-                                <Separator/>
-                                <MenuItem Header="Delete File" Command="{Binding DeleteFile}"
-                                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
-                                                             Path=PlacementTarget.SelectedItem.FilePath}"/>
-                                <MenuItem Header="Delete Output File" Command="{Binding DeleteFile}"
-                                          CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
-                                                             Path=PlacementTarget.SelectedItem.OutPath}"/>
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
                         <DataGrid.Resources>
+                            <ContextMenu x:Key="filesGridContextMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                <MenuItem Header="Open File"
+                                          Command="{Binding DataContext.OpenFile, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                          CommandParameter="{Binding FilePath}"/>
+                                <MenuItem Header="Open Output File"
+                                          Command="{Binding DataContext.OpenFile, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                          CommandParameter="{Binding OutPath}"/>
+                                <Separator/>
+                                <MenuItem Header="Delete File"
+                                          Command="{Binding DataContext.DeleteFile, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                          CommandParameter="{Binding FilePath}"/>
+                                <MenuItem Header="Delete Output File"
+                                          Command="{Binding DataContext.DeleteFile, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                          CommandParameter="{Binding OutPath}"/>
+                            </ContextMenu>
                             <Style TargetType="DataGridRow">
+                                <Setter Property="ContextMenu" Value="{StaticResource filesGridContextMenu}"/>
                                 <EventSetter Event="MouseDoubleClick" Handler="FilesRow_DoubleClick"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Highlighted}" Value="true">
